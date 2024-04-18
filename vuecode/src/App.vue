@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    
+    <HelloWorld/>
   </div>
 </template>
 
@@ -11,6 +11,7 @@ import HelloWorld from './components/HelloWorld.vue'
 export default {
   name: 'App',
   components: {
+    // 这里面包含这个组件里面包含的组件
     HelloWorld
   }
 }

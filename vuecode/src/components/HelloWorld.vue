@@ -1,57 +1,54 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
+    <!-- {{ this.$store.state.count }} -->
+    {{ count }}
+    <button @click="add">+1</button>
+    
     <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
+      <li v-for="todo in todos" :key="todo.id">{{ todo.text }}</li>
     </ul>
-    <h3>Essential Links</h3>
+
     <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
+      <li v-for="todo in doneTodos" :key="todo.id">{{ todo.text }}</li>
     </ul>
   </div>
 </template>
 
 <script>
+import { mapState,mapGetters } from 'vuex'
+
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
+  // computed是vue里面的计算属性，根据依赖关系进行缓存的计算
+  // 只有在它的相关依赖发生变化的时候才会进行更新，当一个数据受多个数据影响的时候可以使用
+  // 计算属性会自动监听内部的数据，如果页面发生变化会自动刷新
+  // computed:{
+  //   count(){
+  //     return this.$store.state.count
+  //   }
+  // },
+  // 下面是利用mapState的简写方法
+  computed:{
+      ...mapState([
+      // 方法名称 ：你要取state里面的什么东西
+      // count : state=> state.count
+
+      // 或者直接写名称（此时计算属性名称和state里面的子节点名称相同）
+      'count','todos'
+    ]),
+    ...mapGetters([
+      'doneTodos'
+    ])
+  },
+  methods:{
+    add(){
+      this.$store.commit("increment",2)
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
