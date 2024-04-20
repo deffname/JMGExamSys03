@@ -18,6 +18,13 @@ const router = new VueRouter({
       path: '/login',
       component: () => import('../views/login'),
       hidden: true
+
+    },
+
+    {
+      path: '/register',
+      component: () => import('../views/register'),
+      hidden: true
     },
 
     {
@@ -32,6 +39,7 @@ const router = new VueRouter({
       component: () => import('@/views/404'),
       hidden: true
     },
+    { path: '*', redirect: '/404', hidden: true },
 
   ]
 })
