@@ -6,6 +6,9 @@ import store from './store'; // 因为在index.js里面，所以index.js可以�
 import axios from 'axios';
 import router from './router';
 
+// 导入Mock的内容，不需要的时候把这个导入删除就行了
+import './mock'
+
 // 定义axios发送请求时的默认地址
 axios.defaults.baseURL = "http://localhost:8080"
 // 将默认地址挂载到Vue身上，一般挂在到Vue身上的属性前面会加$符号
@@ -14,6 +17,12 @@ Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
+
+router.beforeEach((to, from, next) => {
+  // 让进度条开始显示
+  console.log('from router is ', from.fullPath, ' and to router is ', to.fullPath);
+  next()
+})
 
 new Vue({
   render: h => h(App),

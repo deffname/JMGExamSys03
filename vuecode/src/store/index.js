@@ -1,28 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import getters from './getters'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  state: {
-    count: 0,
-    todos: [
-      { id: 1, text: '吃饭', done: true },
-      { id: 2, text: '睡觉', done: false }
-    ]
+  modules: {
+    app,
+    // settings,
+    // user
   },
-  getters: {
-    doneTodos: state => {
-      // filter是一个数组方法，用于从数组中选取符合条件的元素
-      return state.todos.filter(todo => todo.done)
-    }
-  },
-  mutations: {
-    increment(state, n) {
-      // n是外界传进来的参数
-      state.count += n
-    }
-  }
+  getters
 })
 
 // 导出store对象 
