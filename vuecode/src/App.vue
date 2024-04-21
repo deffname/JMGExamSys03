@@ -3,7 +3,7 @@
     <!-- <router-link to="/login">转到登录界面</router-link>
     <router-link to="/404">转到404界面</router-link> -->
     <!-- 声明路由占位标签 -->
-    <router-view></router-view>
+    <router-view/>
   </div>
 </template>
 
