@@ -36,9 +36,13 @@
       </el-form-item>
 
       <el-form-item prop="password">
+        <!-- 这是一个图标 -->
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
+        <!-- 这是密码的输入框 -->
+        <!-- ref给输入框设置一个引用名称 -->
+        <!-- @keyup.enter.native="handleLogin"表示按下enter键时触发handleLogin方法 -->
         <el-input
           :key="passwordType"
           ref="password"
@@ -50,6 +54,7 @@
           auto-complete="on"
           @keyup.enter.native="handleLogin"
         />
+        <!-- 这是密码输入框右边那个眼睛图标 -->
         <span class="show-pwd" @click="showPwd">
           <svg-icon
             :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
@@ -234,6 +239,7 @@ $cursor: #fff;
 }
 </style>
 
+<!-- scoped代表将样式限定在当前组件内部，不污染其他组件 -->
 <style lang="scss" scoped>
 $bg: #2d3a4b;
 $dark_gray: #889aa4;
@@ -246,12 +252,12 @@ $light_gray: #eee;
   overflow: hidden;
 
   .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
+    position: relative; // 设置元素定位为相对定位，意味着元素在文档流中仍然占据原本的空间，可以使用top, right等属性进行位置偏移
+    width: 520px; // 设置元素的宽度
+    max-width: 100%; // 设置元素的最大宽度，确保元素在不同屏幕尺寸下自适应宽度，不会超过父容器的宽度
+    padding: 160px 35px 0; // 设置元素内边距(上，右，下，左)
+    margin: 0 auto; // 设置元素的外边距，上下为0，左右为自动（居中）
+    overflow: hidden; // 设置元素溢出内容隐藏，如果元素内部内容超过指定的宽度和高度，超出部分将被隐藏
   }
 
   .tips {
