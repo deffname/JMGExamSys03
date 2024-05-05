@@ -46,6 +46,7 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        commit('SET_UROLE', userrole)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -61,14 +62,13 @@ const actions = {
         const { data } = response
 
         if (!data) {
-          return reject('Verification failed, please Login again.')
+          return reject('总之登录失败了，去store/user/getinfo下面找这段话')
         }
-
-        const { name, avatar, urole } = data
-
+        // 讲data里面的数据取出来
+        const { name, avatar } = data
+        // 将data里面的数据存放到vuex里面去
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
-        commit('SET_UROLE', urole)
         resolve(data)
       }).catch(error => {
         reject(error)

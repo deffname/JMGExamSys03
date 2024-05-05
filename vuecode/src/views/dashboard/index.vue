@@ -9,7 +9,11 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "Dashboard",
+  created() {
+    console.log("dashboard被启动");
+  },
   computed: {
+    // 获取vuex里面的用户名
     ...mapGetters(["name"]),
   },
 };

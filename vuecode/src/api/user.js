@@ -10,11 +10,13 @@ export function login(data) {
 }
 
 export function getInfo(token) {
+  console.log("getinfo接口被触发，token = ", token);
   return request({
-    url: '/vuecode/user/info',
+    url: '/user/info',
     method: 'get',
     // 适用于get请求，因为get请求的请求体通常不被使用
-    params: { token }
+    // params: { token }
+    token
   })
 }
 

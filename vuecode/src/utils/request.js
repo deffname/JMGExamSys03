@@ -16,7 +16,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    console.log("拦截器被触发")
+    console.log("请求拦截器被触发")
     if (store.getters.token) {
       // 检查是否有一个token存在
       // 如果存在token，就把token加在请求头里面，下面是一个自定义的headers键
@@ -27,6 +27,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
+    console.log("出错位置: request第30行");
     console.log(error) // for debug
     return Promise.reject(error)
   }
@@ -47,6 +48,7 @@ service.interceptors.response.use(
   response => {
     // 从响应对象中提取数据部分
     const res = response.data
+    console.log("请求成功，这是本次请求返回的结果:", res);
 
     // 如果响应的状态码不为500，认为是一个错误响应
     if (res.code !== 500) {
@@ -79,6 +81,7 @@ service.interceptors.response.use(
   },
   error => {
     // 如果请求失败，这个拦截器函数将会被调用
+    console.log("这是请求失败了");
     console.log('err' + error) // for debug
     Message({
       message: error.message,

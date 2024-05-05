@@ -188,7 +188,7 @@ export default {
             .dispatch("user/login", this.loginForm)
             .then(() => {
               // const usrole = this.$store.state.userrole
-
+              console.log("登录提交信息成功");
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
             })
