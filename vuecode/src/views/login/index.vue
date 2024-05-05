@@ -10,7 +10,7 @@
     >
       <el-radio-group
         class="title-container"
-        v-model="userrole"
+        v-model="loginForm.userrole"
         size="big"
         style="margin-bottom: 30px"
       >
@@ -27,7 +27,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          :placeholder="userrole + ' name'"
+          :placeholder="loginForm.userrole + ' name'"
           name="username"
           type="text"
           tabindex="1"
@@ -98,7 +98,9 @@ export default {
     console.log("login被调用");
   },
   data() {
+    // 用来判断是不是一个合法的用户名
     const validateUsername = (rule, value, callback) => {
+      // 这里的rule是当前要验证的对象，value是验证的字段的值
       if (!validUsername(value)) {
         callback(new Error("Please enter the correct user name"));
       } else {
@@ -106,6 +108,7 @@ export default {
       }
     };
     const validatePassword = (rule, value, callback) => {
+      // 这里只对密码长度进行了判断
       if (value.length < 6) {
         callback(new Error("The password can not be less than 6 digits"));
       } else {
@@ -114,10 +117,14 @@ export default {
     };
     return {
       loginForm: {
+        // 这是设置的默认值
         username: "admin",
         password: "111111",
+        userrole: "student",
       },
       loginRules: {
+        // username规则为必须填写，且在失去焦点时触发验证，并且使用自定义的validdateUsername方法进行验证
+        // validator 属性的作用是指定一个用于验证字段的自定义验证函数
         username: [
           { required: true, trigger: "blur", validator: validateUsername },
         ],
@@ -125,51 +132,63 @@ export default {
           { required: true, trigger: "blur", validator: validatePassword },
         ],
       },
-      loading: false,
-      passwordType: "password",
-      redirect: undefined,
-      userrole: "student",
+      loading: false, //控制登录按钮的加载状态，默认为false
+      passwordType: "password", // 密码输入框的类型，默认为possword
+      redirect: undefined, // 未定义的重定向参数
       userroleC: "学生",
     };
   },
   watch: {
+    // 监听路由对象的变化
     $route: {
+      // handler函数会在 route发生变动的时候被调用，接收一个新的route，代表新的路由对象
       handler: function (route) {
+        // 检测新的路由对象是否有query属性 && 检测新的路由对象是否有redirect，如果有就把这个值赋给组件中的redir属性
+        // 路由对象的query属性是指URL中的查询参数部分，即?后面的部分
         this.redirect = route.query && route.query.redirect;
       },
+      // 表示组件创建时立刻立刻执行一次这个函数
       immediate: true,
     },
-    userrole: function (userrole) {
+    "loginForm.userrole": function (newVal) {
       console.log("userrole watch 被调用");
-      if (userrole == "student") {
+      if (newVal == "student") {
         this.userroleC = "学生";
       }
-      if (userrole == "teacher") {
+      if (newVal == "teacher") {
         this.userroleC = "教师";
       }
-      if (userrole == "admin") {
+      if (newVal == "admin") {
         this.userroleC = "管理员";
       }
     },
   },
   methods: {
+    // 用于切换密码框的状态
     showPwd() {
       if (this.passwordType === "password") {
         this.passwordType = "";
       } else {
         this.passwordType = "password";
       }
+      // 在密码输入框内容更新后，将焦点设置到密码输入框上，以便用户可以立即输入密码
       this.$nextTick(() => {
         this.$refs.password.focus();
       });
     },
     handleLogin() {
+      // validate是一个自动实现的函数，被调用时会自动读取loginForm中的每个变量的validator用于比对
+      // valid是验证结果，如果表单验证通过，valid是true，否则是false
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
+          // 让loading图标开始旋转
           this.loading = true;
+          // 调用vuex中的store中的action，如果登录成功就把用户送到根目录或者重定向的目录下面
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
+              // const usrole = this.$store.state.userrole
+
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
             })
@@ -181,6 +200,7 @@ export default {
           return false;
         }
       });
+      // this.$router.push({ path: "/admin" });
     },
     handleRegister() {
       console.log("handleRegister被启动");

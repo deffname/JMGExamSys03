@@ -1,47 +1,86 @@
 import VueRouter from "vue-router";
 import Vue from "vue";
 // 下面导入组件
-
-// 注册
+import Layout from '@/layout'
+// 注册组件
 Vue.use(VueRouter)
 
+// 创建一个常量数组，里面放的是这个项目的路由
 export const constantRoutes = [
+  {
+    path: '/login',
+    component: () => import('../views/login'),
+    hidden: true
 
+  },
+
+  {
+    path: '/register',
+    component: () => import('../views/register'),
+    hidden: true
+  },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: 'dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: 'Dashboard', icon: 'dashboard' }
+    }]
+  },
+
+  {
+    path: '/admin',
+    component: Layout,
+    redirect: '/admin/vteacher',
+    name: 'Admin',
+    meta: { title: 'Admin', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'vteacher',
+        name: 'VTeacher',
+        component: () => import('@/views/vteacher/index'),
+        meta: { title: 'VTeacher', icon: 'table' }
+      },
+      {
+        path: 'vexam',
+        name: 'VExam',
+        component: () => import('@/views/vexam/index'),
+        meta: { title: 'VExam', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
   { path: '*', redirect: '/404', hidden: true },
+
 ]
 
-const router = new VueRouter({
-  // 将组件和路径链接起来，制定hash属性和组件的对应关系
-  // 用到对应组件的地方需要 声明路由占位标签 <router-view></router-view>
-  routes: [
-    {
-      path: '/login',
-      component: () => import('../views/login'),
-      hidden: true
-
-    },
-
-    {
-      path: '/register',
-      component: () => import('../views/register'),
-      hidden: true
-    },
-
-    {
-      path: '/',
-      redirect: '/login',
-      component: () => import('../views/login'),
-      hidden: true
-    },
-
-    {
-      path: '/404',
-      component: () => import('@/views/404'),
-      hidden: true
-    },
-    { path: '*', redirect: '/404', hidden: true },
-
-  ]
+// 创建了一个函数createRouter，这个函数用来创建一个新的vue router实例，其中包含了路由的配置对象
+const createRouter = () => new VueRouter({
+  // 控制页面滚动行为
+  scrollBehavior: () => ({ y: 0 }),
+  // 把上面constantRoutes里面的路由导入到这个新的vue router实例中
+  routes: constantRoutes
 })
+
+// 新建一个vue router实例
+const router = createRouter()
+
+// 用来刷新界面的代码
+// 这个函数用来重置路由器实例，它创建了一个新的路由器实例，
+// 然后将当前路由器的matcher属性设置为新路由器的matcher属性，这样可以清除路由器的现有状态，并重新加载路由
+export function resetRouter() {
+  const newRouter = createRouter()
+  // 属性是路由器的匹配器对象，这个对象负责管理路由的匹配规则和路由表
+  router.matcher = newRouter.matcher
+}
 
 export default router

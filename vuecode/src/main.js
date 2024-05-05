@@ -14,11 +14,9 @@ import '@/styles/index.scss' // 引入全局的css设置
 import axios from 'axios';
 
 import './permission' // 把路由守卫引入
-import './mock'   // 导入Mock的内容，不需要的时候把这个导入删除就行了
+// import './mock'   // 导入Mock的内容，不需要的时候把这个导入删除就行了
 import './icons'  // 导入图标
 
-// 定义axios发送请求时的默认地址
-axios.defaults.baseURL = "http://localhost:8080"
 // 将默认地址挂载到Vue身上，一般挂在到Vue身上的属性前面会加$符号
 Vue.prototype.$http = axios
 // 之后组件中再需要使用axios就不用导入了

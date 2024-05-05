@@ -1,17 +1,22 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+// resetRouter函数用于刷新界面
 import { resetRouter } from '@/router'
 
+// 返回默认的用户对象
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
+    urole: '',
     avatar: ''
   }
 }
 
+// 初始化了用户模块的状态，使用了 getDefaultState() 函数返回的默认状态对象。
 const state = getDefaultState()
 
+// 包含一系列用于修改用户模块状态的mutations函数
 const mutations = {
   RESET_STATE: (state) => {
     Object.assign(state, getDefaultState())
@@ -24,14 +29,20 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_UROLE: (state, urole) => {
+    state.urole = urole
   }
 }
 
+// 包含了一系列用于处理异步操作的 actions 函数
 const actions = {
-  // user login
+  // 登录函数，commit是vuex提供的用于提交mutation的方法，userinfo是出入的参数，包括loginform中的各种信息
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    // 因为名称一样，所以username/password/......和userInfo里面的信息关联起来
+    const { username, password, userrole } = userInfo
     return new Promise((resolve, reject) => {
+      // 这里调用的是登录请求
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
@@ -53,10 +64,11 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
+        const { name, avatar, urole } = data
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_UROLE', urole)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -68,7 +80,7 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
-        removeToken() // must remove  token  first
+        removeToken() // 先把token移除
         resetRouter()
         commit('RESET_STATE')
         resolve()
@@ -81,13 +93,15 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      removeToken() // must remove  token  first
+      removeToken() // 必须先把token移除
       commit('RESET_STATE')
       resolve()
     })
   }
 }
 
+// namespaced是一个布尔值，当它为true` 时，该模块会拥有其自己的命名空间
+// 这意味着它的 state、mutations 和 actions 将只在此模块内部有效，避免与全局或其他模块的命名冲突。
 export default {
   namespaced: true,
   state,
