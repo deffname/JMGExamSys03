@@ -1,3 +1,5 @@
+// 这个文件初始化的时候store还没有完成初始化
+// import store from "@/store"
 /**
  * @param {string} path
  * @returns {Boolean}
@@ -16,3 +18,15 @@ export function validUsername(str) {
   const valid_map = ['admin', 'editor']
   return valid_map.indexOf(str.trim()) >= 0
 }
+
+// /**
+//  * @param {string} role
+//  * @returns {Boolean}
+//  * 传入一个参数，表示当前路由应该在哪个身份下显示，在这里和当前的vuex进行判断此时是否应该隐藏
+//  */
+// export function isHidden(role) {
+//   // console.log('验证是否隐藏的函数调用', store.state.user.urole);
+//   // return store.getters.urole != role
+//   console.log('store可能尚未初始化');
+//   return store.getters.urole!=role
+// }

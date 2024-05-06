@@ -32,6 +32,7 @@ const mutations = {
   },
   SET_UROLE: (state, urole) => {
     state.urole = urole
+    console.log('此时的state ', state)
   }
 }
 
@@ -41,17 +42,20 @@ const actions = {
   login({ commit }, userInfo) {
     // 因为名称一样，所以username/password/......和userInfo里面的信息关联起来
     const { username, password, userrole } = userInfo
+    // 下面这是返回的结果
     return new Promise((resolve, reject) => {
       // 这里调用的是登录请求
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        commit('SET_UROLE', userrole)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      login({ username: username.trim(), password: password, userrole: userrole })
+        .then(response => {
+          const { data } = response
+          console.log('登录返回的数据为', data);
+          commit('SET_TOKEN', data.token)
+          commit('SET_UROLE', userrole)
+          setToken(data.token)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
     })
   },
 
@@ -65,10 +69,11 @@ const actions = {
           return reject('总之登录失败了，去store/user/getinfo下面找这段话')
         }
         // 讲data里面的数据取出来
-        const { name, avatar } = data
+        const { name, avatar, userrole } = data
         // 将data里面的数据存放到vuex里面去
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_UROLE', userrole)
         resolve(data)
       }).catch(error => {
         reject(error)

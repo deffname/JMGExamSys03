@@ -6,7 +6,7 @@ import settings from './modules/settings'
 import user from './modules/user'
 
 Vue.use(Vuex)
-
+console.log('store 将要被创建');
 // 创建一个vuex store实例
 const store = new Vuex.Store({
   modules: {

@@ -36,7 +36,6 @@ router.beforeEach(async (to, from, next) => {
         try {
           // 这里自动发出了调取用户信息的请求
           await store.dispatch('user/getInfo')
-
           next()
         } catch (error) {
           // 如果出现错误，重置token

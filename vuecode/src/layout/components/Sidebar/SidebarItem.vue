@@ -1,6 +1,6 @@
 <!-- 用于渲染侧边栏或菜单中的一个item -->
 <template>
-  <div v-if="!item.hidden">
+  <div v-if="!item.hidden && ifshow(item)">
     <template
       v-if="
         hasOneShowingChild(item.children, item) &&
@@ -82,11 +82,22 @@ export default {
     return {};
   },
   methods: {
+    ifshow(item) {
+      console.log(item.path, "被调用判断");
+      if (item.meta) {
+        // 如果当前router的分类不应该出现在当前用户界面中
+        if (item.meta.belong != this.$store.getters.urole) {
+          return false;
+        }
+      }
+      return true;
+    },
     // 接收两个对象，一个是子项数组，一个是父项对象
     hasOneShowingChild(children = [], parent) {
       // 用filter方法筛选出子项中不隐藏的对象，并把当前的onlyOneChild设置为这个对象
       // 找到所有没有隐藏的对象放入showingChildren数组中
       const showingChildren = children.filter((item) => {
+        console.log(children, "----", parent);
         if (item.hidden) {
           return false;
         } else {
@@ -110,6 +121,7 @@ export default {
       // 显示子项多于一个，返回false
       return false;
     },
+
     resolvePath(routePath) {
       if (isExternal(routePath)) {
         // 是外部链接就返回这个链接
@@ -119,7 +131,7 @@ export default {
         return this.basePath;
       }
       // 使用node.js的resolve方法将basePath与routePath合并为一个完整的路径
-      console.log("basepath = ", this.basePath, " routePath = ", routePath);
+      // console.log("basepath = ", this.basePath, " routePath = ", routePath);
       return path.resolve(this.basePath, routePath);
     },
   },

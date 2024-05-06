@@ -204,6 +204,8 @@ export default {
     },
     handleRegister() {
       console.log("handleRegister被启动");
+      // 在vuex中改变当前用户的urole值
+      this.$store.commit("user/SET_UROLE", this.loginForm.userrole);
       // 指挥路由跳转到注册界面
       this.$router.push({ path: "/register" });
       // this.$router.push({ path: '/register' })

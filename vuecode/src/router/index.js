@@ -2,6 +2,7 @@ import VueRouter from "vue-router";
 import Vue from "vue";
 // 下面导入组件
 import Layout from '@/layout'
+
 // 注册组件
 Vue.use(VueRouter)
 
@@ -37,19 +38,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/admin/vteacher',
     name: 'Admin',
-    meta: { title: 'Admin', icon: 'el-icon-s-help' },
+    meta: { title: 'Admin', icon: 'el-icon-s-help', belong: 'admin' },
     children: [
       {
         path: 'vteacher',
         name: 'VTeacher',
         component: () => import('@/views/vteacher/index'),
-        meta: { title: 'VTeacher', icon: 'table' }
+        meta: { title: 'VTeacher', icon: 'table', belong: 'admin' }
       },
       {
         path: 'vexam',
         name: 'VExam',
         component: () => import('@/views/vexam/index'),
-        meta: { title: 'VExam', icon: 'tree' }
+        meta: { title: 'VExam', icon: 'tree', belong: 'admin' }
       }
     ]
   },

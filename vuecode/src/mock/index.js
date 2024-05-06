@@ -15,11 +15,26 @@ Mock.mock('http://localhost:8087/user/login', {
 })
 
 
-Mock.mock('http://localhost:8087/user/info', 'get', {
+Mock.mock('http://localhost:8087/user/info', {
   "code": 500,
   "message": "success",
   "data": {
     "name": "admin",
-    "avatar": "src/assets/404_images/404.png"
+    "avatar": "src/assets/404_images/404.png",
+    "userrole": "student"
+  }
+})
+
+Mock.mock('http://localhost:8087/user/register', {
+  "code": 500,
+  "message": "success",
+  "data": {
+  }
+})
+
+Mock.mock('http://localhost:8087/user/logout', {
+  "code": 500,
+  "message": "success",
+  "data": {
   }
 })

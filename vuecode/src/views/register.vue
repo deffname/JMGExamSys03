@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { register } from "@/api/user";
+
 export default {
   data() {
     return {
@@ -45,6 +47,13 @@ export default {
   },
   methods: {
     onSubmit() {
+      register({
+        username: this.registerForm.username,
+        fullname: this.registerForm.fullname,
+        password: this.registerForm.password,
+        userrole: this.$store.state.user.urole,
+      });
+
       this.$router.push({ path: "login" });
     },
   },
