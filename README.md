@@ -3,6 +3,8 @@
 ## spring boot 2.x
 ## vue2 
 
+token:https://www.cnblogs.com/Jason-Xiang/p/9808596.html
+
 # 后端开发流程
 ## 从controller下面接收数据
 ## controller调用UserService包下面的服务

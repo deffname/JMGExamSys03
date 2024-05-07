@@ -34,11 +34,11 @@ export const constantRoutes = [
   },
 
   {
-    path: '/admin',
+    path: '/adminv',
     component: Layout,
-    redirect: '/admin/vteacher',
-    name: 'Admin',
-    meta: { title: 'Admin', icon: 'el-icon-s-help', belong: 'admin' },
+    redirect: '/adminv/vteacher',
+    name: 'View',
+    meta: { title: 'View', icon: 'el-icon-s-help', belong: 'admin' },
     children: [
       {
         path: 'vteacher',

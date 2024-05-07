@@ -1,16 +1,24 @@
 package com.example.jmgexamsys03.service.impl;
 
+import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.example.jmgexamsys03.domain.ResponseResult;
 import com.example.jmgexamsys03.entity.Dto.RegisterUserDto;
 import com.example.jmgexamsys03.entity.User;
 import com.example.jmgexamsys03.mapper.UserMapper;
 import com.example.jmgexamsys03.service.UserService;
+
+import com.example.jmgexamsys03.utils.JwtUtils;
+import com.example.jmgexamsys03.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
+    private RedisCache redisCache;
 
     @Autowired
     public UserServiceImpl(UserMapper userMapper) {
@@ -34,5 +42,28 @@ public class UserServiceImpl implements UserService {
         System.out.println("&&& 运行到创建对象了");
         userMapper.insert(user);
         return ResponseResult.okResult();
+    }
+
+    /**
+     * 验证token的逻辑
+     * @param token
+     * @return
+     */
+    @Override
+    public User checkToken(String token) {
+        System.out.println("check token:"+token);
+        if(StringUtils.isEmpty(token)){
+            return null;
+        }
+        Map<String,Object> map = JwtUtils.checkToken(token);
+        if(map==null){
+            return null;
+        }
+        String userJson =  redisCache.getCacheObject("TOKEN_" + token);
+        if (StringUtils.isEmpty(userJson)) {
+            return null;
+        }
+        User user = JSON.parseObject(userJson, User.class);
+        return user;
     }
 }
