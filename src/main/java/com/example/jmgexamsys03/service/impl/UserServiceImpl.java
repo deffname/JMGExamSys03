@@ -2,7 +2,10 @@ package com.example.jmgexamsys03.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
+import com.example.jmgexamsys03.domain.enums.AppHttpCodeEnum;
+import com.example.jmgexamsys03.entity.Dto.LoginDto;
 import com.example.jmgexamsys03.entity.Dto.RegisterUserDto;
 import com.example.jmgexamsys03.entity.User;
 import com.example.jmgexamsys03.mapper.UserMapper;
@@ -41,6 +44,21 @@ public class UserServiceImpl implements UserService {
 
         System.out.println("&&& 运行到创建对象了");
         userMapper.insert(user);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult loginUser(LoginDto loginDto) {
+        System.out.println("登录信息为" + loginDto);
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("username",loginDto.getUsername());
+        User user = userMapper.selectOne(userQueryWrapper);
+
+        if(user == null){
+            // 用户不存在
+            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
+        }
+
         return ResponseResult.okResult();
     }
 

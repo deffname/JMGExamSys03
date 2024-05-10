@@ -1,6 +1,7 @@
 package com.example.jmgexamsys03.service;
 
 import com.example.jmgexamsys03.domain.ResponseResult;
+import com.example.jmgexamsys03.entity.Dto.LoginDto;
 import com.example.jmgexamsys03.entity.Dto.RegisterUserDto;
 import com.example.jmgexamsys03.entity.User;
 
@@ -11,6 +12,14 @@ public interface UserService {
      * @return通用响应类型
      */
     ResponseResult registerUser(RegisterUserDto registerUserDto);
+
+    /**
+     * 处理用户登录
+     * @param loginDto
+     * @return 包括一个token和用户的身份
+     */
+
+    ResponseResult loginUser(LoginDto loginDto);
 
     /**
      * 检查用户Token是否正确。如果正确，从token中解析出用户信息并返回

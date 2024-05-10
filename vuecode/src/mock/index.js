@@ -21,7 +21,7 @@ Mock.mock('http://localhost:8087/user/info', {
   "data": {
     "name": "admin",
     "avatar": "src/assets/404_images/404.png",
-    "userrole": "student"
+    "userrole": "admin"
   }
 })
 

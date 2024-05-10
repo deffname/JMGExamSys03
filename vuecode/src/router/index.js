@@ -56,6 +56,22 @@ export const constantRoutes = [
   },
 
   {
+    path: '/studentv',
+    component: Layout,
+    redirect: '/studentv/vexam',
+    name: 'View',
+    meta: { title: 'View', icon: 'el-icon-s-help', belong: 'student' },
+    children: [
+      {
+        path: 'vexam',
+        name: 'VExam',
+        component: () => import('@/views/vexam/index'),
+        meta: { title: 'VExam', icon: 'tree', belong: 'student' }
+      }
+    ]
+  },
+
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true

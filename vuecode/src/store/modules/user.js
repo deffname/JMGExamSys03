@@ -8,7 +8,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    urole: '',
+    urole: 'student',
     avatar: ''
   }
 }
@@ -94,6 +94,10 @@ const actions = {
       })
     })
   },
+  changerole({ commit, crole }) {
+    commit('SET_UROLE', crole)
+  }
+  ,
 
   // remove token
   resetToken({ commit }) {
