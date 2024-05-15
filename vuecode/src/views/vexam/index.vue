@@ -17,6 +17,13 @@
           <el-button type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
+      <el-table-column label="学生操作" width="150" v-if="!isNotStudent">
+        <template slot-scope="scope">
+          <el-button @click="takeExam(scope.row)" type="text" size="small">
+            进入考试
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -77,6 +84,11 @@ export default {
   },
   methods: {
     handleClick(row) {},
+    takeExam(row){
+      console.log('学生点击对应考试，要进入考试界面');
+      this.$router.push('/studentv/stuexam');
+      console.log('跳转到考试界面完成');
+    }
   },
 };
 </script>

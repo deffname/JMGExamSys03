@@ -19,9 +19,9 @@ Mock.mock('http://localhost:8087/user/info', {
   "code": 500,
   "message": "success",
   "data": {
-    "name": "admin",
+    "name": "user",
     "avatar": "src/assets/404_images/404.png",
-    "userrole": "admin"
+    "userrole": "teacher"
   }
 })
 

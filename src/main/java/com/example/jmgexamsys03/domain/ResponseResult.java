@@ -65,6 +65,11 @@ public class ResponseResult<T> implements Serializable {
         return result.ok(code, null, msg);
     }
 
+    public static ResponseResult okResult(String msg) {
+        ResponseResult result = new ResponseResult();
+        return result.ok(AppHttpCodeEnum.SUCCESS.getCode(), null, msg);
+    }
+
     public static ResponseResult okResult(Object data) {
         ResponseResult result = setAppHttpCodeEnum(AppHttpCodeEnum.SUCCESS, AppHttpCodeEnum.SUCCESS.getMsg());
         if (data != null) {

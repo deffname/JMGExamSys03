@@ -5,27 +5,41 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
 import com.example.jmgexamsys03.domain.enums.AppHttpCodeEnum;
+import com.example.jmgexamsys03.entity.*;
 import com.example.jmgexamsys03.entity.Dto.LoginDto;
+import com.example.jmgexamsys03.entity.Dto.LoginUserResponseDto;
 import com.example.jmgexamsys03.entity.Dto.RegisterUserDto;
-import com.example.jmgexamsys03.entity.User;
-import com.example.jmgexamsys03.mapper.UserMapper;
+import com.example.jmgexamsys03.mapper.*;
 import com.example.jmgexamsys03.service.UserService;
 
 import com.example.jmgexamsys03.utils.JwtUtils;
 import com.example.jmgexamsys03.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
+    private ComparsiontableMapper comparsiontableMapper;
+    private StudentMapper studentMapper;
+    private TeacherMapper teacherMapper;
+    private AdminMapper adminMapper;
+
+    @Autowired
     private RedisCache redisCache;
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper) {
+    public UserServiceImpl(UserMapper userMapper, ComparsiontableMapper comparsiontableMapper, StudentMapper studentMapper, TeacherMapper teacherMapper, AdminMapper adminMapper) {
         this.userMapper = userMapper;
+        this.comparsiontableMapper = comparsiontableMapper;
+        this.studentMapper = studentMapper;
+        this.teacherMapper = teacherMapper;
+        this.adminMapper = adminMapper;
     }
 
     /**
@@ -39,27 +53,77 @@ public class UserServiceImpl implements UserService {
         User user = new User(
                 registerUserDto.getUsername(),
                 registerUserDto.getPassword(),
-                registerUserDto.getFullname()
+                registerUserDto.getFullname(),
+                registerUserDto.getIdentity()
         );
+        String pwd = registerUserDto.getPassword();
+        String salt = user.getSalt();
+        String md5Pwd =DigestUtils.md5DigestAsHex((pwd+salt).getBytes());
+        user.setPassword(md5Pwd);
 
-        System.out.println("&&& 运行到创建对象了");
+        // 判断用户名称是否已经存在
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<User>();
+        userQueryWrapper.eq("username",user.getUsername());
+        List<User> user1 = userMapper.selectList(userQueryWrapper);
+        if(!user1.isEmpty()){
+            System.out.println("注册的用户名已存在");
+            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR,"用户名已存在");
+        }
+
+        System.out.println("身份是" + user.getIdentity());
         userMapper.insert(user);
-        return ResponseResult.okResult();
+
+        // 用equals是因为对stringl这种引用类型数据，如果用==比较的是存储的内容地址
+        if(user.getIdentity().equals("student")){
+            Student stu = new Student();
+            studentMapper.insert(stu);
+            Long tmp1 = null;
+//            System.out.println("Sid = "+stu.getSid());
+//            Long test =new Long(3);
+            comparsiontableMapper.insert(new Comparsiontable(user.getUid(),stu.getSid(),tmp1,tmp1));
+        } else if (user.getIdentity().equals("teacher")) {
+            Teacher tea = new Teacher();
+            teacherMapper.insert(tea);
+            Long tmp1 = null;
+            comparsiontableMapper.insert(new Comparsiontable(user.getUid(),tmp1,tea.getTid(),tmp1));
+        }else {
+            Admin admin = new Admin();
+            adminMapper.insert(admin);
+            Long tmp1 = null;
+            comparsiontableMapper.insert(new Comparsiontable(user.getUid(),tmp1,tmp1,admin.getAid()));
+        }
+
+        return ResponseResult.okResult("注册成功");
     }
 
     @Override
     public ResponseResult loginUser(LoginDto loginDto) {
         System.out.println("登录信息为" + loginDto);
+        String psw = loginDto.getPassword();
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("username",loginDto.getUsername());
         User user = userMapper.selectOne(userQueryWrapper);
 
         if(user == null){
             // 用户不存在
-            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
+            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR,"不存在此用户");
         }
 
-        return ResponseResult.okResult();
+        String md5psw = DigestUtils.md5DigestAsHex((psw+user.getSalt()).getBytes());
+        if(!md5psw.equals(user.getPassword())){
+            // 密码验证没有成功
+            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR,"密码错误");
+        }
+        System.out.println("登录验证成功");
+        // 存储token
+        String token = JwtUtils.createToken(user.getUid());//创建一个token
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&");
+        System.out.println("TOKEN_"+token);
+        //将token插入redis,1天后过期
+        redisCache.setCacheObject("TOKEN_"+token, JSON.toJSONString(user),1, TimeUnit.DAYS);
+
+        // 返回对应用户的token和身份
+        return ResponseResult.okResult(new LoginUserResponseDto(token,user.getIdentity()));
     }
 
     /**

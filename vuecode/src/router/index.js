@@ -37,7 +37,7 @@ export const constantRoutes = [
     path: '/adminv',
     component: Layout,
     redirect: '/adminv/vteacher',
-    name: 'View',
+    name: 'AdminView',
     meta: { title: 'View', icon: 'el-icon-s-help', belong: 'admin' },
     children: [
       {
@@ -48,7 +48,7 @@ export const constantRoutes = [
       },
       {
         path: 'vexam',
-        name: 'VExam',
+        name: 'VAdminExam',
         component: () => import('@/views/vexam/index'),
         meta: { title: 'VExam', icon: 'tree', belong: 'admin' }
       }
@@ -59,14 +59,44 @@ export const constantRoutes = [
     path: '/studentv',
     component: Layout,
     redirect: '/studentv/vexam',
-    name: 'View',
+    name: 'StuView',
     meta: { title: 'View', icon: 'el-icon-s-help', belong: 'student' },
     children: [
       {
         path: 'vexam',
-        name: 'VExam',
+        name: 'VStuExam',
         component: () => import('@/views/vexam/index'),
-        meta: { title: 'VExam', icon: 'tree', belong: 'student' }
+        meta: { title: 'VExam', icon: 'tree', belong: 'student' },
+      },
+      {
+        path: 'stuexam',
+        name: 'StuExam',
+        component: () => import('@/views/vexam/stuexam'),
+        hidden: true,
+        meta: { title: 'StuExam', icon: 'tree' },
+      }
+
+    ]
+  },
+
+  {
+    path: '/teacher',
+    component: Layout,
+    name: 'Teacher',
+    redirect: '/teacher/vexam',
+    meta: { title: 'View', icon: 'tree', belong: 'teacher' },
+    children: [
+      {
+        path: 'vexam',
+        component: () => import('@/views/vexam'),
+        name: 'TeaVExam',
+        meta: { title: 'TeaVExam', icon: 'tree', belong: 'teacher' }
+      },
+      {
+        path: 'cexam',
+        component: () => import('@/views/exam/createExam'),
+        name: 'CreateExam',
+        meta: { title: 'CreateExam', icon: 'tree', belong: 'teacher' }
       }
     ]
   },

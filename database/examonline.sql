@@ -23,7 +23,7 @@ USE `examonline`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `aid` bigint NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`aid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `exam` (
 CREATE TABLE IF NOT EXISTS `student` (
   `sid` bigint NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `student` (
 CREATE TABLE IF NOT EXISTS `teacher` (
   `tid` bigint NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`tid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -96,8 +96,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(50) NOT NULL DEFAULT '0',
   `identity` varchar(50) NOT NULL DEFAULT '0',
   `username` varchar(50) NOT NULL DEFAULT '0',
+  `salt` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
