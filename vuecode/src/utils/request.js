@@ -20,9 +20,10 @@ service.interceptors.request.use(
     if (store.getters.token) {
       // 检查是否有一个token存在
       // 如果存在token，就把token加在请求头里面，下面是一个自定义的headers键
-      config.headers['X-Token'] = getToken()
+      config.headers['token'] = getToken()
     }
     // 返回修改（可能）过后的请求
+    console.log('发送出去的请求为', config);
     return config
   },
   error => {
@@ -51,10 +52,10 @@ service.interceptors.response.use(
     console.log("请求成功，这是本次请求返回的结果:", res);
 
     // 如果响应的状态码不为500，认为是一个错误响应
-    if (res.code !== 500) {
+    if (res.code !== 200) {
       // 是错误响应就显示出对应的提示
       Message({
-        message: res.message || 'Error',
+        message: res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
@@ -73,7 +74,7 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.msg || 'Error'))
     } else {
       // 是正确响应，直接返回响应的结果
       return res
@@ -84,7 +85,7 @@ service.interceptors.response.use(
     console.log("这是请求失败了");
     console.log('err' + error) // for debug
     Message({
-      message: error.message,
+      message: error.msg,
       type: 'error',
       duration: 5 * 1000
     })

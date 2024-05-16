@@ -9,11 +9,13 @@ import com.example.jmgexamsys03.entity.*;
 import com.example.jmgexamsys03.entity.Dto.LoginDto;
 import com.example.jmgexamsys03.entity.Dto.LoginUserResponseDto;
 import com.example.jmgexamsys03.entity.Dto.RegisterUserDto;
+import com.example.jmgexamsys03.entity.Dto.infoResponseDto;
 import com.example.jmgexamsys03.mapper.*;
 import com.example.jmgexamsys03.service.UserService;
 
 import com.example.jmgexamsys03.utils.JwtUtils;
 import com.example.jmgexamsys03.utils.RedisCache;
+import com.example.jmgexamsys03.utils.UserThreadLocal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -124,6 +126,20 @@ public class UserServiceImpl implements UserService {
 
         // 返回对应用户的token和身份
         return ResponseResult.okResult(new LoginUserResponseDto(token,user.getIdentity()));
+    }
+
+    /**
+     * 前端切换界面时返回信息
+     * @param
+     * @return 包括用户名，用户身份，用户头像
+     */
+
+    public ResponseResult getinfoUser(){
+        User tmp = UserThreadLocal.get();
+        if(tmp == null){
+            return new ResponseResult<>().error(AppHttpCodeEnum.LOGIN_ERROR.getCode(),"请重新登录");
+        }
+        return ResponseResult.okResult(new infoResponseDto(tmp.getUsername(),tmp.getIdentity(),"nu"));
     }
 
     /**

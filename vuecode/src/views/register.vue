@@ -51,7 +51,7 @@ export default {
         username: this.registerForm.username,
         fullname: this.registerForm.fullname,
         password: this.registerForm.password,
-        userrole: this.$store.state.user.urole,
+        identity: this.$store.state.user.urole,
       });
 
       this.$router.push({ path: "login" });

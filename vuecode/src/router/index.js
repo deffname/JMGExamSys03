@@ -80,10 +80,10 @@ export const constantRoutes = [
   },
 
   {
-    path: '/teacher',
+    path: '/teacherv',
     component: Layout,
-    name: 'Teacher',
-    redirect: '/teacher/vexam',
+    name: 'TeacherV',
+    redirect: '/teacherv/vexam',
     meta: { title: 'View', icon: 'tree', belong: 'teacher' },
     children: [
       {
@@ -92,6 +92,16 @@ export const constantRoutes = [
         name: 'TeaVExam',
         meta: { title: 'TeaVExam', icon: 'tree', belong: 'teacher' }
       },
+    ]
+  },
+
+  {
+    path: '/teacherm',
+    component: Layout,
+    name: 'TeacherM',
+    redirect: '/teacherm/vexam',
+    meta: { title: 'View', icon: 'tree', belong: 'teacher' },
+    children: [
       {
         path: 'cexam',
         component: () => import('@/views/exam/createExam'),

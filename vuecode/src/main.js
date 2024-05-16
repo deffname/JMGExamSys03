@@ -14,7 +14,7 @@ import '@/styles/index.scss' // 引入全局的css设置
 import axios from 'axios';
 
 import './permission' // 把路由守卫引入
-import './mock'   // 导入Mock的内容，不需要的时候把这个导入删除就行了
+// import './mock'   // 导入Mock的内容，不需要的时候把这个导入删除就行了
 import './icons'  // 导入图标
 
 // 将默认地址挂载到Vue身上，一般挂在到Vue身上的属性前面会加$符号

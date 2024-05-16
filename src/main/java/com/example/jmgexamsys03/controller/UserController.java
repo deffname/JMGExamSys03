@@ -6,10 +6,7 @@ import com.example.jmgexamsys03.entity.Dto.LoginDto;
 import com.example.jmgexamsys03.entity.Dto.RegisterUserDto;
 import com.example.jmgexamsys03.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -29,5 +26,14 @@ public class UserController {
     @PostMapping("/login")
     public ResponseResult loginController(@RequestBody LoginDto loginDto){
         return userService.loginUser(loginDto);
+    }
+
+    @GetMapping ("/info")
+    public ResponseResult getInfoController(){
+        return userService.getinfoUser();
+    }
+    @PostMapping("/logout")
+    public ResponseResult  logoutController(){
+        return ResponseResult.okResult("成功退出登录");
     }
 }

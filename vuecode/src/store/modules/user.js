@@ -49,9 +49,10 @@ const actions = {
         .then(response => {
           const { data } = response
           console.log('登录返回的数据为', data);
-          commit('SET_TOKEN', data.token)
-          commit('SET_UROLE', userrole)
-          setToken(data.token)
+          commit('SET_TOKEN', data.accessToken)
+          commit('SET_UROLE', data.identity)
+          commit('SET_NAME', data.username)
+          setToken(data.accessToken)
           resolve()
         }).catch(error => {
           reject(error)
@@ -69,11 +70,12 @@ const actions = {
           return reject('总之登录失败了，去store/user/getinfo下面找这段话')
         }
         // 讲data里面的数据取出来
-        const { name, avatar, userrole } = data
+        const { username, avatar, identity } = data
         // 将data里面的数据存放到vuex里面去
-        commit('SET_NAME', name)
+        commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
-        commit('SET_UROLE', userrole)
+        commit('SET_UROLE', identity)
+
         resolve(data)
       }).catch(error => {
         reject(error)

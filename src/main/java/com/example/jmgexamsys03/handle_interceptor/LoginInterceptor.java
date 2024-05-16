@@ -35,8 +35,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         if(!(handler instanceof HandlerMethod)){
             return true;
         }
+        System.out.println("request = " + request);
         String token = request.getHeader("token");
         String requestURL = String.valueOf(request.getRequestURL());
+        System.out.println("本次请求传入的token为"+token);
         // 判断token是否为空
         if(StringUtils.isEmpty(token)){
             System.out.println("error url is " + requestURL);

@@ -26,7 +26,7 @@ export function getInfo(token) {
     method: 'get',
     // 适用于get请求，因为get请求的请求体通常不被使用，这种传参方式mock那边不知道怎么处理的，暂时放弃
     // params: { token }
-    token
+    // token
   })
 }
 
