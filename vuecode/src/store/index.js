@@ -4,6 +4,7 @@ import getters from './getters'
 import app from './modules/app'
 import settings from './modules/settings'
 import user from './modules/user'
+import api from './modules/api'
 
 Vue.use(Vuex)
 console.log('store 将要被创建');
@@ -12,7 +13,8 @@ const store = new Vuex.Store({
   modules: {
     app,
     settings,
-    user
+    user,
+    api
   },
   getters
 })

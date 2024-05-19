@@ -7,34 +7,43 @@ import Mock from "mockjs";
 
 
 Mock.mock('http://localhost:8087/user/login', {
-  "code": 500,
-  "message": "success",
+  "code": 200,
+  "msg": "login",
   "data": {
-    "token": "ssssssss"
+    "accessToken": "ssssssss",
+    "username": "mock",
+    "identity": "teacher"
   }
 })
 
 
 Mock.mock('http://localhost:8087/user/info', {
-  "code": 500,
-  "message": "success",
+  "code": 200,
+  "msg": "info",
   "data": {
     "name": "user",
     "avatar": "src/assets/404_images/404.png",
-    "userrole": "teacher"
+    "identity": "teacher"
   }
 })
 
 Mock.mock('http://localhost:8087/user/register', {
-  "code": 500,
-  "message": "success",
+  "code": 200,
+  "msg": "register",
   "data": {
   }
 })
 
 Mock.mock('http://localhost:8087/user/logout', {
-  "code": 500,
-  "message": "success",
+  "code": 200,
+  "msg": "logout",
+  "data": {
+  }
+})
+
+Mock.mock('http://localhost:8087/user/updateAvatar', {
+  "code": 200,
+  "msg": "更新图像",
   "data": {
   }
 })

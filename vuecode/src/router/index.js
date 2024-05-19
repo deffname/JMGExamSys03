@@ -3,6 +3,7 @@ import Vue from "vue";
 // 下面导入组件
 import Layout from '@/layout'
 
+
 // 注册组件
 Vue.use(VueRouter)
 
@@ -18,6 +19,12 @@ export const constantRoutes = [
   {
     path: '/register',
     component: () => import('../views/register'),
+    hidden: true
+  },
+
+  {
+    path: '/uploadAvatar',
+    component: () => import('../views/dashboard/userpic.vue'),
     hidden: true
   },
 

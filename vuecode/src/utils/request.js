@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth'
 // 创建一个axios的实例
 const service = axios.create({
   // 设置所有请求的基本url
-  baseURL: "http://localhost:8087", // url = base url + request url
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // baseURL: "http://127.0.0.1:4523/m1/4266312-0-default",
   // 设置请求的超时时间是5s
   timeout: 5000 // request timeout
@@ -16,7 +16,8 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    console.log("请求拦截器被触发")
+    console.log("请求拦截器被触发，此时url为", process.env.VUE_APP_BASE_API)
+    console.log("请求拦截器被触发，此时url为", process.env)
     if (store.getters.token) {
       // 检查是否有一个token存在
       // 如果存在token，就把token加在请求头里面，下面是一个自定义的headers键

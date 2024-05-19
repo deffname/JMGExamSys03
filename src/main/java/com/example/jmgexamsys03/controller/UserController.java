@@ -32,6 +32,7 @@ public class UserController {
     public ResponseResult getInfoController(){
         return userService.getinfoUser();
     }
+
     @PostMapping("/logout")
     public ResponseResult  logoutController(){
         return ResponseResult.okResult("成功退出登录");

@@ -32,6 +32,7 @@
 import { register } from "@/api/user";
 
 export default {
+  name: "Register",
   data() {
     return {
       registerForm: {
@@ -45,13 +46,14 @@ export default {
   created() {
     console.log("register被启动");
   },
+
   methods: {
     onSubmit() {
       register({
         username: this.registerForm.username,
         fullname: this.registerForm.fullname,
         password: this.registerForm.password,
-        identity: this.$store.state.user.urole,
+        identity: this.$store.getters.urole,
       });
 
       this.$router.push({ path: "login" });
