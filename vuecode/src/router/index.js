@@ -18,13 +18,7 @@ export const constantRoutes = [
 
   {
     path: '/register',
-    component: () => import('../views/register'),
-    hidden: true
-  },
-
-  {
-    path: '/uploadAvatar',
-    component: () => import('../views/dashboard/userpic.vue'),
+    component: () => import('@/views/register'),
     hidden: true
   },
 
@@ -138,7 +132,7 @@ const createRouter = () => new VueRouter({
 // 新建一个vue router实例
 const router = createRouter()
 
-// 用来刷新界面的代码
+// 设置刷新时候要做的事情的代码
 // 这个函数用来重置路由器实例，它创建了一个新的路由器实例，
 // 然后将当前路由器的matcher属性设置为新路由器的matcher属性，这样可以清除路由器的现有状态，并重新加载路由
 export function resetRouter() {

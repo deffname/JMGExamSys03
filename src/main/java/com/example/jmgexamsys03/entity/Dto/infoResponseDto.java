@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class infoResponseDto {
     private String username;
     private String identity;
-    private String avater;
+    private String avatar;
 }

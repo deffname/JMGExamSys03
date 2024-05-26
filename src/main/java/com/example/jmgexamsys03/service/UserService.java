@@ -26,7 +26,6 @@ public interface UserService {
      * @param
      * @return 包括用户名，用户身份，用户头像
      */
-
     ResponseResult getinfoUser();
 
     /**

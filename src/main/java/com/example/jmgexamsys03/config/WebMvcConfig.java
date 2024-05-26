@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -45,11 +46,26 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 检查前端传送回来的数据是否有对应的token
         // 检查所有的接口，但是除了注册和登录接口
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/**").excludePathPatterns("/user/register","/user/login","/uppic");//参数是需要做登录验证的接口，这里代表验证所有/开头的接口。
+                .addPathPatterns("/**").excludePathPatterns("/user/register","/user/login");//参数是需要做登录验证的接口，这里代表验证所有/开头的接口。
 //        registry.addInterceptor(studentInterceptor)
 //                .addPathPatterns("/student/**");
 //        registry.addInterceptor(teacherInterceptor)
 //                .addPathPatterns("/teacher/**");
+    }
+
+    // 用虚拟路径进行映射，使得前端可以调用本地的代码
+    // 部署到云上时也许需要删除
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        /**
+         * 资源映射路径
+         * addResourceHandler：访问映射路径
+         * addResourceLocations：资源绝对路径
+         */
+
+        // 部署时似乎不需要更改，访问时如果是http://localhost:8087/mfile/...就自动访问后面的addResourceLocations路径下的文件夹
+        // 这里的image并不真实存在，只是用于逻辑区分或者代指后面的绝对路径
+        registry.addResourceHandler("/mfile/**").addResourceLocations("file:D:/user_app/mfile/");
     }
 }
 

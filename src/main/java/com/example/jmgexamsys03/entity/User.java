@@ -22,6 +22,7 @@ public class User {
     private String fullname;
     private String password;
     private String identity;
+    private String avatar;
 
     /*
         当User对象被序列化为JSON字符串时，salt属性将不会被包含在生成的JSON中，

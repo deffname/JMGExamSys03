@@ -73,7 +73,7 @@ const actions = {
         const { username, avatar, identity } = data
         // 将data里面的数据存放到vuex里面去
         commit('SET_NAME', username)
-        commit('SET_AVATAR', avatar)
+        commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
         commit('SET_UROLE', identity)
 
         resolve(data)

@@ -139,7 +139,8 @@ public class UserServiceImpl implements UserService {
         if(tmp == null){
             return new ResponseResult<>().error(AppHttpCodeEnum.LOGIN_ERROR.getCode(),"请重新登录");
         }
-        return ResponseResult.okResult(new infoResponseDto(tmp.getUsername(),tmp.getIdentity(),"nu"));
+        
+        return ResponseResult.okResult(new infoResponseDto(tmp.getUsername(),tmp.getIdentity(),tmp.getAvatar()));
     }
 
     /**
@@ -149,7 +150,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User checkToken(String token) {
-        System.out.println("check token:"+token);
+//        System.out.println("check token:"+token);
         if(StringUtils.isEmpty(token)){
             return null;
         }
