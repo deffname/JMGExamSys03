@@ -23,7 +23,7 @@ USE `examonline`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `aid` bigint NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`aid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `exam` (
 CREATE TABLE IF NOT EXISTS `student` (
   `sid` bigint NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -97,8 +97,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `identity` varchar(50) NOT NULL DEFAULT '0',
   `username` varchar(50) NOT NULL DEFAULT '0',
   `salt` varchar(50) DEFAULT NULL,
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
