@@ -52,8 +52,7 @@ CREATE TABLE IF NOT EXISTS `compexamstu` (
   `anspaper` binary(50) DEFAULT NULL,
   KEY `FK_eid_examc` (`eid`),
   KEY `FK_sid_stucc` (`sid`),
-  CONSTRAINT `FK_eid_examc` FOREIGN KEY (`eid`) REFERENCES `exam` (`eid`),
-  CONSTRAINT `FK_sid_stucc` FOREIGN KEY (`sid`) REFERENCES `student` (`sid`)
+  CONSTRAINT `FK_eid_examc` FOREIGN KEY (`eid`) REFERENCES `exam` (`eid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
