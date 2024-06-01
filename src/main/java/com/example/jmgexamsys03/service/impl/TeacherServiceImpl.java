@@ -3,7 +3,6 @@ package com.example.jmgexamsys03.service.impl;
 
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -26,7 +25,6 @@ import com.example.jmgexamsys03.mapper.StudentMapper;
 import com.example.jmgexamsys03.mapper.TeacherMapper;
 import com.example.jmgexamsys03.mapper.UserMapper;
 import com.example.jmgexamsys03.service.TeacherService;
-import com.example.jmgexamsys03.service.UserService;
 import com.example.jmgexamsys03.utils.UserThreadLocal;
 
 @Service
@@ -130,14 +128,14 @@ public class TeacherServiceImpl implements TeacherService{
             usQueryWrapper.eq("uid",compexamstu.getSid()).eq("identity","student");
             User user2=userMapper.selectOne(usQueryWrapper);
             if(user2==null){
-                return ResponseResult.errorResult(AppHttpCodeEnum.ROLE_NOT_EXIST,"该用户不是学生或不存在");
+                return ResponseResult.errorResult(AppHttpCodeEnum.ROLE_NOT_EXIST,"uid"+String.valueOf(compexamstu.getSid())+"此用户不是学生或不存在");
             }
             //判断要添加的是否已经在考试列表中
             QueryWrapper<Compexamstu> compexamQueryWrapper=new QueryWrapper<>();
             compexamQueryWrapper.eq("sid",compexamstu.getSid());
             Compexamstu user3=examStuMapper.selectOne(compexamQueryWrapper);
             if(!(user3==null)){
-                return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_SELECTED,"该学生已在考试列表中");
+                return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_SELECTED,"uid"+String.valueOf(compexamstu.getSid())+"此学生已在考试列表中");
             }
 
             examStuMapper.insert(compexamstu);
@@ -157,7 +155,7 @@ public class TeacherServiceImpl implements TeacherService{
         examQueryWrapper.eq("eid",deleteStudentDto.getEid());
         Exam exam = examMapper.selectOne(examQueryWrapper);
         if(exam==null){
-            return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"学生要参加的考试不存在");
+            return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"教师要删除的考试不存在");
         }
         //将学生从考试中删除
         int count=0;
