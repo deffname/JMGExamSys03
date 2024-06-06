@@ -60,10 +60,6 @@ public interface TeacherService {
      */
     ResponseResult EndExam();
 
-
-
-
-
     /**
      * 教师获取考试列表
      * @param
