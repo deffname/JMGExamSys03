@@ -56,6 +56,11 @@ public class TeacherController {
     public ResponseResult  EndExamController(){
         return teacherService.EndExam();
     }
+
+    @GetMapping("/exam/getlist")
+    public ResponseResult  GetExamController(){
+        return teacherService.getExam();
+    }
 }
 
 

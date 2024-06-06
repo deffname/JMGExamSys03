@@ -3,14 +3,13 @@ package com.example.jmgexamsys03.service.impl;
 
 import java.util.Iterator;
 import java.util.List;
+
+import com.example.jmgexamsys03.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
 import com.example.jmgexamsys03.domain.enums.AppHttpCodeEnum;
-import com.example.jmgexamsys03.entity.Compexamstu;
-import com.example.jmgexamsys03.entity.Exam;
-import com.example.jmgexamsys03.entity.User;
 import com.example.jmgexamsys03.entity.Dto.AddStudentDto;
 import com.example.jmgexamsys03.entity.Dto.ChangeExamDto;
 import com.example.jmgexamsys03.entity.Dto.CheckExamDto;
@@ -207,5 +206,19 @@ public class TeacherServiceImpl implements TeacherService{
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
         }
         return ResponseResult.okResult("结束成功");
+    }
+
+    public ResponseResult getExam(){
+        System.out.println("获取考试服务被调用");
+        long uid = UserThreadLocal.get().getUid();
+        QueryWrapper<Comparsiontable> qwt = new QueryWrapper<>();
+        qwt.eq("uid",uid);
+        long tid = comparsiontableMapper.selectOne(qwt).getTid();
+        QueryWrapper<Exam> qwe = new QueryWrapper<>();
+        qwe.eq("tid",tid);
+        List<Exam> exams = examMapper.selectList(qwe);
+
+        return ResponseResult.okResult(exams);
+
     }
 }

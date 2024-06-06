@@ -43,7 +43,7 @@ public interface TeacherService {
     ResponseResult DeleteStudent(DeleteStudentDto deleteStudentDto);
     /**
      * 教师开启考试
-     * @param startExamDto
+     * @param
      * @return通用响应类型
      */
     ResponseResult StartExam();
@@ -55,7 +55,7 @@ public interface TeacherService {
     ResponseResult CheckExam(CheckExamDto checkExamDto);
     /**
      * 教师结束考试
-     * @param endExamDto
+     * @param
      * @return通用响应类型
      */
     ResponseResult EndExam();
@@ -64,12 +64,13 @@ public interface TeacherService {
 
 
 
-
     /**
      * 教师获取考试列表
-     * @param registerUserDto
+     * @param
      * @return通用响应类型
      */
+
+    ResponseResult getExam();
 
     /**
      * 教师获取学生的答案
