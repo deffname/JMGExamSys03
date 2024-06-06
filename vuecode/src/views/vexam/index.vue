@@ -11,10 +11,12 @@
       </el-table-column>
       <el-table-column label="操作" width="150" v-if="isNotStudent">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small"
-            >查看</el-button
+          <el-button @click="manageExam(scope.row)" type="text" size="small"
+            >编辑</el-button
           >
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button @click="deleteExam(scope.row)" type="text" size="small"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column label="学生操作" width="150" v-if="!isNotStudent">
@@ -83,7 +85,8 @@ export default {
     },
   },
   methods: {
-    handleClick(row) {},
+    manageExam(row) {},
+    deleteExam(row){},
     takeExam(row){
       console.log('学生点击对应考试，要进入考试界面');
       this.$router.push('/studentv/stuexam');

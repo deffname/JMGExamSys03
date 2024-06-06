@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateExamDto {
+    private String edate;
     private String starttime;
     private String endtime;
     private String examname;
-    private String exampaper;
 }

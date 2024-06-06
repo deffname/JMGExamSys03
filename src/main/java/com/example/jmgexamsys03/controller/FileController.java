@@ -3,7 +3,9 @@ package com.example.jmgexamsys03.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
+import com.example.jmgexamsys03.entity.Exam;
 import com.example.jmgexamsys03.entity.User;
+import com.example.jmgexamsys03.mapper.ExamMapper;
 import com.example.jmgexamsys03.mapper.StudentMapper;
 import com.example.jmgexamsys03.mapper.UserMapper;
 import com.example.jmgexamsys03.utils.UserThreadLocal;
@@ -17,10 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
 
 
 @RestController
@@ -30,9 +35,12 @@ public class FileController {
 
     // 保存照片存储时的名字
     private String avatar_name;
-
+    // 用于获取当前时间
+    private SimpleDateFormat nowtime;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ExamMapper examMapper;
 
     @PostMapping(value = "/uppic")
     public ResponseEntity<Object> uploadPic(MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) throws IOException{
@@ -42,7 +50,12 @@ public class FileController {
         //得到头像文件
         MultipartFile f = files.get("avatar");
         // System.out.println("文件的原始名称是:" + f.getOriginalFilename()); 估计是前端的组件做了处理，这里的原始名称全是abatar.png
-        this.avatar_name = UserThreadLocal.get().getUid()+ "_avatar.png";
+
+        //时间格式化格式
+        nowtime =new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        //获取当前时间并作为时间戳给文件夹命名
+        String timeStamp1 = nowtime.format(new Date());
+        this.avatar_name = UserThreadLocal.get().getUid() + timeStamp1+ ".png";
 
         System.out.println("文件大小为"+f.getSize());
 
@@ -51,7 +64,7 @@ public class FileController {
 //        System.out.println("uppic 中 request.getServletContext() = " + request.getServletContext().getRealPath(""));
         String path = "D:/user_app/mfile/mpic/";
         System.out.println("uppic 中 path = " + path);
-        saveFile(f,path);
+        saveFile(f,path,avatar_name);
 
         // 将头像地址放到数据库里面去
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
@@ -70,13 +83,36 @@ public class FileController {
                 }}
         );
     }
-    public void saveFile(MultipartFile f,String path) throws IOException{
+
+    @PostMapping("upefile")
+    public ResponseResult uploadEPaper(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response)throws IOException{
+        String fname = file.getOriginalFilename();
+
+        // 获取当前考试的id号码
+        long noweid = Long.parseLong(request.getHeader("eid"));
+        nowtime =new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        //获取当前时间并作为时间戳给文件夹命名
+        String timeStamp1 = nowtime.format(new Date());
+
+        fname = timeStamp1+fname;
+        System.out.println("文件名称为"+fname);
+        String path = "D:/user_app/mfile/epaper/";
+        System.out.println("uppic 中 path = " + path);
+        saveFile(file,path,fname);
+
+        UpdateWrapper<Exam> uwe = new UpdateWrapper<>();
+        uwe.eq("eid",noweid).set("exampaper","/mfile/epaper/"+fname);
+        int tmp = examMapper.update(null,uwe);
+        System.out.println("tmp = "+ tmp);
+        return ResponseResult.okResult();
+    }
+    public void saveFile(MultipartFile f,String path,String filename) throws IOException{
         File upDir = new File(path);
         if(!upDir.exists()){
             upDir.mkdir();
         }
         // 将文件存储到对应目录中去
-        File file = new File(path+this.avatar_name);
+        File file = new File(path+filename);
         f.transferTo(file);
     }
 }

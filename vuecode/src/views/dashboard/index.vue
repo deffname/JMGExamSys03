@@ -86,7 +86,7 @@ export default {
     },
     cropSuccess(imgDataUrl, field) {
       console.log("-------- crop success --------");
-      console.log(imgDataUrl);
+      console.log("头像被设置为", imgDataUrl);
       //把头像设置成上传的图片
       this.default_avatar = imgDataUrl;
       console.log(field);

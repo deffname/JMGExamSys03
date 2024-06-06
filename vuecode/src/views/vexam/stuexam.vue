@@ -1,21 +1,33 @@
 <template>
-  <div>
-    <el-row :gutter="20">
-      <el-col :span="14">
-        <!-- shadow表示鼠标悬停在这里时显示阴影，统计组件显示的值是deadline3 -->
-        <el-card shadow="hover" style="width: 100%; margin-top: 20px">
-          <div style="width: 100%; display: inline-block">
-            <el-statistic
-              @finish="hilarity"
-              :value="deadline3"
-              time-indices
-              title="距离考试结束还有"
-            >
-            </el-statistic>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+  <div class="centered-container">
+    <div style="width: 80%">
+      <el-row>
+        <el-col :span="24">
+          <!-- shadow表示鼠标悬停在这里时显示阴影，统计组件显示的值是deadline3 -->
+          <el-card shadow="hover" style="width: 100%; margin-top: 20px">
+            <div style="width: 100%; display: inline-block">
+              <el-statistic
+                @finish="hilarity"
+                :value="deadline3"
+                time-indices
+                title="距离考试结束还有"
+              >
+              </el-statistic>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 15px">
+        <el-col :span="24">
+          <el-button style="width: 100%"> 下载试卷 </el-button>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 15px">
+        <el-col :span="24">
+          <el-button style="width: 100%"> 上传答案 </el-button>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -41,5 +53,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.centered-container {
+  display: flex;
+  justify-content: center;
+
+  height: 100vh;
+  width: 100%;
+}
 </style>

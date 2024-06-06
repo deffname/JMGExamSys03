@@ -1,6 +1,7 @@
 package com.example.jmgexamsys03.entity;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,15 +17,17 @@ import lombok.NoArgsConstructor;
 public class Exam {
     @TableId(type = IdType.AUTO)
     private long eid;
-    private String starttime;
-    private String endtime;
+    private Date starttime;
+    private Date endtime;
     private String examname;
     private String exampaper;
+    // 开创这个课程的教师的id
+    private long tid;
 
-    public Exam(String starttime,String endtime,String name,String exampaper){
+    public Exam(Date starttime,Date endtime,String name,long tid){
         this.starttime=starttime;
         this.endtime=endtime;
         this.examname=name;
-        this.exampaper=exampaper;
+        this.tid = tid;
     }
 }

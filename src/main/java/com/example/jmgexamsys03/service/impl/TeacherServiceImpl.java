@@ -1,10 +1,14 @@
 package com.example.jmgexamsys03.service.impl;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+
 import com.example.jmgexamsys03.entity.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -52,16 +56,35 @@ public class TeacherServiceImpl implements TeacherService{
         User user = UserThreadLocal.get();
         if (!user.getIdentity().equals("teacher")){
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
-        } 
+        }
+        long uid = user.getUid();
+        QueryWrapper<Comparsiontable> qwt = new QueryWrapper<>();
+        qwt.eq("uid",uid);
+        long tid = comparsiontableMapper.selectOne(qwt).getTid();
 
+        System.out.println("创建考试时传送来的信息为"+ createExamDto);
+        // 将字符串转换为时间
+        // 先定义时间转换的格式
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String stime = createExamDto.getEdate() +" "+ createExamDto.getStarttime()+":00";
+        String etime = createExamDto.getEdate() +" "+ createExamDto.getEndtime()+":00";
+        Date st = null;
+        Date et = null;
+        try {
+            st = formatter.parse(stime);
+            et = formatter.parse(etime);
+        } catch (Exception e){
+            System.out.println("时间转换错误");
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
+        }
         Exam exam=new Exam(
-            createExamDto.getStarttime(),
-            createExamDto.getEndtime(),
+            st,
+            et,
             createExamDto.getExamname(),
-            createExamDto.getExampaper()
+                tid
         );
         examMapper.insert(exam);
-        return ResponseResult.okResult("创建成功");
+        return ResponseResult.okResult(exam.getEid());
     }
     @Override
     public ResponseResult ChangeExam(ChangeExamDto changeExamDto){
@@ -77,10 +100,10 @@ public class TeacherServiceImpl implements TeacherService{
         if(exam==null){
             return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"要改变的考试不存在");
         }
-        exam.setStarttime(changeExamDto.getStarttime());
-        exam.setEndtime(changeExamDto.getEndtime());
-        exam.setExampaper(changeExamDto.getExampaper());
-        examMapper.update(exam, examQueryWrapper);
+//        exam.setStarttime(changeExamDto.getStarttime());
+//        exam.setEndtime(changeExamDto.getEndtime());
+//        exam.setExampaper(changeExamDto.getExampaper());
+//        examMapper.update(exam, examQueryWrapper);
         return ResponseResult.okResult("改变成功");
     }
     @Override
