@@ -1,5 +1,8 @@
 package com.example.jmgexamsys03.service;
 
+import com.example.jmgexamsys03.domain.ResponseResult;
+import com.example.jmgexamsys03.entity.Student;
+
 public interface StudentService {
 
     /**
@@ -7,36 +10,27 @@ public interface StudentService {
      * @param student
      * @return ResultModel	返回数据模型
      */
-    ResultModel login(Student student);
+    ResponseResult login(Student student);
 
     /**
      * queryExams:(根据学生id查看所对应的考试). <br/>
      * @param id
      * @return ResultModel
      */
-    ResultModel queryExams(String id);
+    ResponseResult queryExams(String id);
 
     /**
      * displayQuestion:(根据考试的id来获取试卷信息). <br/>
      * @param eId
      * @return ResultModel
      */
-    ResultModel displayQuestion(int eId);
+    ResponseResult displayQuestion(int eId);
 
-    /**
-     * @Description:(保存考生答案). <br/>
-     * @param examId
-     * @param studentId
-     * @param ques
-     * @return
-     * @throws SQLException
-     */
-    ResultModel saveAsnwers(int examId, String studentId, List<Question> ques) throws SQLException;
 
     /**
      * bindIp(开始考试时绑定学生Ip)
      * @param student
      * @return
      */
-    ResultModel bindIp(Student student);
+    ResponseResult bindIp(Student student);
 }

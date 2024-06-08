@@ -2,6 +2,7 @@ package com.example.jmgexamsys03.domain;
 
 import com.example.jmgexamsys03.domain.enums.AppHttpCodeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
 
 import java.io.Serializable;
@@ -72,6 +73,9 @@ public class ResponseResult<T> implements Serializable {
 
     public static ResponseResult okResult(Object data) {
         ResponseResult result = setAppHttpCodeEnum(AppHttpCodeEnum.SUCCESS, AppHttpCodeEnum.SUCCESS.getMsg());
+        if(data == null){
+            System.out.println("返回的数据为空");
+        }
         if (data != null) {
             result.setData(data);
         }

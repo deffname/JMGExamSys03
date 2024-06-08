@@ -6,6 +6,7 @@
       border
       style="width: 100%"
       :default-sort="{ prop: 'sdate', order: 'descending' }"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column
@@ -39,8 +40,7 @@
 </template>
 
 <script>
-import { getExam } from "@/api/teacher";
-import router from "@/router";
+import { getExam, deleteExam } from "@/api/teacher";
 
 export default {
   created() {
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       tableData: [],
-
+      checkedExam: [],
       defaultColumns: [
         {
           prop: "eid",
@@ -107,13 +107,27 @@ export default {
   },
   methods: {
     manageExam(row) {
-      console.log("教师编辑考试界面的row = ",row);
+      console.log("教师编辑考试界面的row = ", row);
       this.$router.push({
         path: "/teacherm/addstu",
         query: { id: row.eid },
       });
     },
-    deleteExam(row) {},
+    deleteExam(row) {
+      deleteExam({ eidl: this.checkedExam })
+        .then(() => {
+          this.$message({
+            message: "删除成功",
+            type: "success",
+          });
+        })
+        .catch(() => {
+          this.$message.error("未成功删除，请重新尝试");
+        });
+    },
+    handleSelectionChange(val) {
+      this.checkedExam = val.map((item) => item.eid);
+    },
     takeExam(row) {
       console.log("学生点击对应考试，要进入考试界面");
       this.$router.push("/studentv/stuexam");

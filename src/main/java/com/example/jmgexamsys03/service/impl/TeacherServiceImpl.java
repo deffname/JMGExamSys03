@@ -3,6 +3,7 @@ package com.example.jmgexamsys03.service.impl;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -161,25 +162,11 @@ public class TeacherServiceImpl implements TeacherService{
         return ResponseResult.okResult("添加成功");
     }
     @Override
-    public ResponseResult DeleteStudent(DeleteStudentDto deleteStudentDto){
-        User user = UserThreadLocal.get();
-        if (!user.getIdentity().equals("teacher")){
-            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
-        }
-        //判断考试是否存在
-        QueryWrapper<Exam> examQueryWrapper = new QueryWrapper<>();
-        examQueryWrapper.eq("eid",deleteStudentDto.getEid());
-        Exam exam = examMapper.selectOne(examQueryWrapper);
-        if(exam==null){
-            return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"教师要删除的考试不存在");
-        }
-        //将学生从考试中删除
-        int count=0;
-        while(count<deleteStudentDto.getSidlist().length){
-            QueryWrapper<Compexamstu> compexamstuQueryWrapper = new QueryWrapper<>();
-            compexamstuQueryWrapper.in("sid",deleteStudentDto.getSidlist()[count]);
-            examStuMapper.delete(compexamstuQueryWrapper);
-            count++;
+    public ResponseResult DeleteStudent(List<String> sekeyl){
+        System.out.println("传递进来的sekeyl"+sekeyl);
+        for(String mse:sekeyl){
+            System.out.println("now mse = "+mse);
+            examStuMapper.deleteById(mse);
         }
         return ResponseResult.okResult("删除成功");
     }
@@ -244,5 +231,32 @@ public class TeacherServiceImpl implements TeacherService{
         // 获取用户中的所有学生
         List<Student> stuList =  studentMapper.selectList(qws);
         return ResponseResult.okResult(stuList);
+    }
+
+    public ResponseResult DeleteExam(List<Long> eidl){
+        for(Long eidt:eidl){
+            examMapper.deleteById(eidt);
+        }
+        return ResponseResult.okResult("删除对应考试成功");
+    }
+
+    public ResponseResult getEStudent(long eid){
+        QueryWrapper<Compexamstu> qwces = new QueryWrapper<>();
+        qwces.eq("eid",eid);
+        List<Compexamstu> myces = examStuMapper.selectList(qwces);
+        List<getEStuResDto> retl = new ArrayList<>();
+        for(Compexamstu ces:myces){
+            Student st = studentMapper.selectById(ces.getSid());
+            if(st==null){
+                return ResponseResult.errorResult(AppHttpCodeEnum.ROLE_NOT_EXIST);
+            }
+            retl.add(new getEStuResDto(
+                    ces.getSid(),
+                    st.getSname(),
+                    ces.getAnspaper()
+            ));
+
+        }
+        return ResponseResult.okResult(retl);
     }
 }

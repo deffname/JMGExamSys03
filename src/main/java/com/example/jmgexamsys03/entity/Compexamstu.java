@@ -1,5 +1,6 @@
 package com.example.jmgexamsys03.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,7 @@ public class Compexamstu {
     private long  sid;
     private long  eid;
     private String anspaper;
+    @TableId
     private String sekey;
     public Compexamstu(long sid,long eid,String sekey){
         this.sid=sid;

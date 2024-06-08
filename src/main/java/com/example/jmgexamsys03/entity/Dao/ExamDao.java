@@ -3,7 +3,6 @@ package com.example.jmgexamsys03.entity.Dao;
 
 
 import com.example.jmgexamsys03.entity.Exam;
-import com.example.jmgexamsys03.entity.Question;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -66,21 +65,7 @@ public interface ExamDao {
      */
     List<Exam> getExamsByState(String status) throws SQLException;
 
-    /**
-     * getQues:(获取试卷的试题)
-     * @param id
-     * @return List<Question>
-     * @throws SQLException
-     */
-    List<Question> getQues(int id) throws SQLException;
 
-    /**
-     * importQues:(上传试卷的试题)
-     * @param
-     * @param
-     * @throws SQLException
-     */
-    void importQues(Question ques) throws SQLException;
 
     /**
      * @Description:(清除试题). <br/>

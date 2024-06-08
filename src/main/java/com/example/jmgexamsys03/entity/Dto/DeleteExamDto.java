@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class DeleteStudentDto {
-    private List<String> sekeyl;
-    
+@NoArgsConstructor
+public class DeleteExamDto {
+    List<Long> eidl;
 }

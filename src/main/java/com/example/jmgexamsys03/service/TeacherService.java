@@ -7,6 +7,8 @@ import com.example.jmgexamsys03.entity.Dto.CheckExamDto;
 import com.example.jmgexamsys03.entity.Dto.CreateExamDto;
 import com.example.jmgexamsys03.entity.Dto.DeleteStudentDto;
 
+import java.util.List;
+
 public interface TeacherService {
     /**
      * 教师创建新的考试
@@ -22,12 +24,6 @@ public interface TeacherService {
      */
 //    ResponseResult ChangeExam(ChangeExamDto changeExamDto);
     /**
-     * 教师上传试卷功能
-     * @param uploadExamDto
-     * @return通用响应类型
-     */
-    // ResponseResult UploadExam(UploadExamDto uploadExamDto);
-    /**
      * 教师添加考试的学生
      * @param addStudentDto
      * @return通用响应类型
@@ -35,10 +31,18 @@ public interface TeacherService {
     ResponseResult AddStudent(AddStudentDto addStudentDto);
     /**
      * 教师删除考试的学生
-     * @param deleteStudentDto
+     * @param sekey
      * @return通用响应类型
      */
-    ResponseResult DeleteStudent(DeleteStudentDto deleteStudentDto);
+    ResponseResult DeleteStudent(List<String> sekey);
+
+    /**
+     * 教师删除考试
+     * @param eidl
+     * @return通用响应类型
+     */
+    ResponseResult DeleteExam(List<Long> eidl);
+
     /**
      * 教师开启考试
      * @param
@@ -67,12 +71,18 @@ public interface TeacherService {
     ResponseResult getExam();
 
     /**
-     * 教师获取学生列表
+     * 教师获取全部学生列表
      * @param
      * @return通用响应类型，包括一个包含学生信息的列表
      */
-
     ResponseResult getStudent();
+
+    /**
+     * 教师获取当前考试的学生列表
+     * @param
+     * @return通用响应类型，包括一个包含学生信息的列表
+     */
+    ResponseResult getEStudent(long eid);
 
     /**
      * 教师获取学生的答案

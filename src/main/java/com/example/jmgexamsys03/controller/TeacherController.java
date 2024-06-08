@@ -2,13 +2,12 @@ package com.example.jmgexamsys03.controller;
 
 
 import com.example.jmgexamsys03.domain.ResponseResult;
-import com.example.jmgexamsys03.entity.Dto.AddStudentDto;
-import com.example.jmgexamsys03.entity.Dto.CheckExamDto;
-import com.example.jmgexamsys03.entity.Dto.CreateExamDto;
-import com.example.jmgexamsys03.entity.Dto.DeleteStudentDto;
+import com.example.jmgexamsys03.entity.Dto.*;
 import com.example.jmgexamsys03.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/teacher")
@@ -35,8 +34,12 @@ public class TeacherController {
         return teacherService.AddStudent(addStudentDto);
     }
     @PostMapping("/exam/deleteStu")
-    public ResponseResult  DeleteStudentController(@RequestBody DeleteStudentDto deleteStudentDto){
-        return teacherService.DeleteStudent(deleteStudentDto);
+    public ResponseResult  DeleteStudentController(@RequestBody DeleteStudentDto dsd){
+        return teacherService.DeleteStudent(dsd.getSekeyl());
+    }
+    @PostMapping("/exam/deleteExam")
+    public ResponseResult  DeleteExamController(@RequestBody DeleteExamDto ded){
+        return teacherService.DeleteExam(ded.getEidl());
     }
     @GetMapping("/exam/start")
     public ResponseResult  StartExamController(){
@@ -59,6 +62,11 @@ public class TeacherController {
     @GetMapping("/getstu")
     public ResponseResult GetStudentController(){
         return teacherService.getStudent();
+    }
+    @GetMapping("/getestu")
+    public ResponseResult GetEStudentController(@RequestParam("eid") String eid){
+        System.out.println("收到参数"+eid);
+        return teacherService.getEStudent(Long.parseLong(eid));
     }
 }
 
