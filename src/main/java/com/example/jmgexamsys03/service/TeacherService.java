@@ -3,11 +3,9 @@ package com.example.jmgexamsys03.service;
 
 import com.example.jmgexamsys03.domain.ResponseResult;
 import com.example.jmgexamsys03.entity.Dto.AddStudentDto;
-import com.example.jmgexamsys03.entity.Dto.ChangeExamDto;
 import com.example.jmgexamsys03.entity.Dto.CheckExamDto;
 import com.example.jmgexamsys03.entity.Dto.CreateExamDto;
 import com.example.jmgexamsys03.entity.Dto.DeleteStudentDto;
-import com.example.jmgexamsys03.entity.Dto.UploadExamDto;
 
 public interface TeacherService {
     /**
@@ -22,13 +20,13 @@ public interface TeacherService {
      * @param changeExamDto
      * @return通用响应类型
      */
-    ResponseResult ChangeExam(ChangeExamDto changeExamDto);
+//    ResponseResult ChangeExam(ChangeExamDto changeExamDto);
     /**
      * 教师上传试卷功能
      * @param uploadExamDto
      * @return通用响应类型
      */
-    ResponseResult UploadExam(UploadExamDto uploadExamDto);
+    // ResponseResult UploadExam(UploadExamDto uploadExamDto);
     /**
      * 教师添加考试的学生
      * @param addStudentDto
@@ -67,6 +65,14 @@ public interface TeacherService {
      */
 
     ResponseResult getExam();
+
+    /**
+     * 教师获取学生列表
+     * @param
+     * @return通用响应类型，包括一个包含学生信息的列表
+     */
+
+    ResponseResult getStudent();
 
     /**
      * 教师获取学生的答案

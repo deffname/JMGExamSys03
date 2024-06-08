@@ -1,6 +1,7 @@
 package com.example.jmgexamsys03.service.impl;
 
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -9,17 +10,12 @@ import java.util.List;
 
 import com.example.jmgexamsys03.entity.*;
 
+import com.example.jmgexamsys03.entity.Dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
 import com.example.jmgexamsys03.domain.enums.AppHttpCodeEnum;
-import com.example.jmgexamsys03.entity.Dto.AddStudentDto;
-import com.example.jmgexamsys03.entity.Dto.ChangeExamDto;
-import com.example.jmgexamsys03.entity.Dto.CheckExamDto;
-import com.example.jmgexamsys03.entity.Dto.CreateExamDto;
-import com.example.jmgexamsys03.entity.Dto.DeleteStudentDto;
-import com.example.jmgexamsys03.entity.Dto.UploadExamDto;
 import com.example.jmgexamsys03.mapper.AdminMapper;
 import com.example.jmgexamsys03.mapper.ComparsiontableMapper;
 import com.example.jmgexamsys03.mapper.ExamMapper;
@@ -86,45 +82,45 @@ public class TeacherServiceImpl implements TeacherService{
         examMapper.insert(exam);
         return ResponseResult.okResult(exam.getEid());
     }
-    @Override
-    public ResponseResult ChangeExam(ChangeExamDto changeExamDto){
-        User user = UserThreadLocal.get();
-        if (!user.getIdentity().equals("teacher")){
-            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
-        }
-        
-        QueryWrapper<Exam> examQueryWrapper = new QueryWrapper<>();
-        examQueryWrapper.eq("eid",changeExamDto.getEid());
-        Exam exam = examMapper.selectOne(examQueryWrapper);
-        //判断考试是否存在
-        if(exam==null){
-            return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"要改变的考试不存在");
-        }
-//        exam.setStarttime(changeExamDto.getStarttime());
-//        exam.setEndtime(changeExamDto.getEndtime());
-//        exam.setExampaper(changeExamDto.getExampaper());
+ 
+//    public ResponseResult ChangeExam(ChangeExamDto changeExamDto){
+//        User user = UserThreadLocal.get();
+//        if (!user.getIdentity().equals("teacher")){
+//            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
+//        }
+//
+//        QueryWrapper<Exam> examQueryWrapper = new QueryWrapper<>();
+//        examQueryWrapper.eq("eid",changeExamDto.getEid());
+//        Exam exam = examMapper.selectOne(examQueryWrapper);
+//        //判断考试是否存在
+//        if(exam==null){
+//            return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST);
+//        }
+////        exam.setStarttime(changeExamDto.getStarttime());
+////        exam.setEndtime(changeExamDto.getEndtime());
+////        exam.setExampaper(changeExamDto.getExampaper());
+////        examMapper.update(exam, examQueryWrapper);
+//        return ResponseResult.okResult("改变成功");
+//    }
+
+//    public ResponseResult UploadExam(UploadExamDto uploadExamDto){
+//        User user = UserThreadLocal.get();
+//        if (!user.getIdentity().equals("teacher")){
+//            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
+//        }
+//
+//        QueryWrapper<Exam> examQueryWrapper = new QueryWrapper<>();
+//        examQueryWrapper.eq("eid",uploadExamDto.getEid());
+//        Exam exam = examMapper.selectOne(examQueryWrapper);
+//
+//        if(exam==null){
+//            return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"要改变的考试不存在");
+//        }
+//
+//        exam.setExampaper(uploadExamDto.getExampaper());
 //        examMapper.update(exam, examQueryWrapper);
-        return ResponseResult.okResult("改变成功");
-    }
-    @Override
-    public ResponseResult UploadExam(UploadExamDto uploadExamDto){
-        User user = UserThreadLocal.get();
-        if (!user.getIdentity().equals("teacher")){
-            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
-        }
-
-        QueryWrapper<Exam> examQueryWrapper = new QueryWrapper<>();
-        examQueryWrapper.eq("eid",uploadExamDto.getEid());
-        Exam exam = examMapper.selectOne(examQueryWrapper);
-
-        if(exam==null){
-            return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"要改变的考试不存在");
-        }
-
-        exam.setExampaper(uploadExamDto.getExampaper());
-        examMapper.update(exam, examQueryWrapper);
-        return ResponseResult.okResult("上传成功");
-    }
+//        return ResponseResult.okResult("上传成功");
+//    }
     @Override
     public ResponseResult AddStudent(AddStudentDto addStudentDto){
         User user = UserThreadLocal.get();
@@ -132,36 +128,34 @@ public class TeacherServiceImpl implements TeacherService{
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
         }
         //判断考试是否存在
-            QueryWrapper<Exam> examQueryWrapper = new QueryWrapper<>();
-            examQueryWrapper.eq("eid",addStudentDto.getEid());
-            Exam exam = examMapper.selectOne(examQueryWrapper);
-            if(exam==null){
-                return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"学生要参加的考试不存在");
-            }
+        QueryWrapper<Exam> examQueryWrapper = new QueryWrapper<>();
+        examQueryWrapper.eq("eid",addStudentDto.getEid());
+        Exam exam = examMapper.selectOne(examQueryWrapper);
+        if(exam==null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_NOT_EXIST,"学生要参加的考试不存在");
+        }
         //将学生加入考试
-        int count=0;
-        while(count<addStudentDto.getSidlist().length){
-            Compexamstu compexamstu=new Compexamstu(
-            addStudentDto.getSidlist()[count],
-            addStudentDto.getEid()
-            );
+        List<Long> sidlist = addStudentDto.getSidlist();
+        long eidt = addStudentDto.getEid();
+        for(long sidt:sidlist){
+            String tmp = eidt +"_" + sidt;
+            Compexamstu compexamstu=new Compexamstu(sidt, eidt, tmp);
             //判断要添加的是否为学生
-            QueryWrapper<User> usQueryWrapper= new QueryWrapper<>();
-            usQueryWrapper.eq("uid",compexamstu.getSid()).eq("identity","student");
-            User user2=userMapper.selectOne(usQueryWrapper);
-            if(user2==null){
-                return ResponseResult.errorResult(AppHttpCodeEnum.ROLE_NOT_EXIST,"uid"+String.valueOf(compexamstu.getSid())+"此用户不是学生或不存在");
-            }
+
             //判断要添加的是否已经在考试列表中
-            QueryWrapper<Compexamstu> compexamQueryWrapper=new QueryWrapper<>();
-            compexamQueryWrapper.eq("sid",compexamstu.getSid());
-            Compexamstu user3=examStuMapper.selectOne(compexamQueryWrapper);
-            if(!(user3==null)){
-                return ResponseResult.errorResult(AppHttpCodeEnum.COURSE_SELECTED,"uid"+String.valueOf(compexamstu.getSid())+"此学生已在考试列表中");
+            try{
+                examStuMapper.insert(compexamstu);
+            }catch (Exception e){
+                if (e.getCause() instanceof SQLIntegrityConstraintViolationException) {
+                    // 这是由于违反了唯一约束（比如主键冲突）而抛出的异常
+                    System.out.println("学号为"+sidt+"的学生已经加入过了");
+                } else {
+                    // 其他类型的异常，可能需要不同的处理逻辑
+                    e.printStackTrace();
+                    return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"添加学生信息时出现错误");
+                }
             }
 
-            examStuMapper.insert(compexamstu);
-            count++;
         }
 
         return ResponseResult.okResult("添加成功");
@@ -243,5 +237,12 @@ public class TeacherServiceImpl implements TeacherService{
 
         return ResponseResult.okResult(exams);
 
+    }
+
+    public ResponseResult getStudent(){
+        QueryWrapper<Student> qws = new QueryWrapper<>();
+        // 获取用户中的所有学生
+        List<Student> stuList =  studentMapper.selectList(qws);
+        return ResponseResult.okResult(stuList);
     }
 }

@@ -78,6 +78,8 @@ public class UserServiceImpl implements UserService {
         // 用equals是因为对stringl这种引用类型数据，如果用==比较的是存储的内容地址
         if(user.getIdentity().equals("student")){
             Student stu = new Student();
+            // 把学生的真实姓名放到学生表格里面
+            stu.setSname(user.getFullname());
             studentMapper.insert(stu);
             Long tmp1 = null;
 //            System.out.println("Sid = "+stu.getSid());

@@ -138,6 +138,11 @@ export default {
           });
           console.error("试卷文件上传失败:", error); // 调试信息
         }
+
+        this.$router.push({
+          path: "/teacherm/addstu",
+          query: { id: data },
+        });
       } catch (error) {
         this.$message({
           message: "考试创建失败",

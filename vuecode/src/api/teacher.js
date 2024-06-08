@@ -7,3 +7,25 @@ export function createExam(data) {
     data
   })
 }
+
+export function getExam() {
+  return request({
+    url: '/teacher/exam/getlist',
+    method: 'get',
+  })
+}
+
+export function getStudent() {
+  return request({
+    url: '/teacher/getstu',
+    method: 'get',
+  })
+}
+
+export function addStudent(data) {
+  return request({
+    url: '/teacher/exam/addStu',
+    method: 'post',
+    data
+  })
+}

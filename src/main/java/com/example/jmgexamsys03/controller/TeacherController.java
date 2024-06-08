@@ -3,11 +3,9 @@ package com.example.jmgexamsys03.controller;
 
 import com.example.jmgexamsys03.domain.ResponseResult;
 import com.example.jmgexamsys03.entity.Dto.AddStudentDto;
-import com.example.jmgexamsys03.entity.Dto.ChangeExamDto;
 import com.example.jmgexamsys03.entity.Dto.CheckExamDto;
 import com.example.jmgexamsys03.entity.Dto.CreateExamDto;
 import com.example.jmgexamsys03.entity.Dto.DeleteStudentDto;
-import com.example.jmgexamsys03.entity.Dto.UploadExamDto;
 import com.example.jmgexamsys03.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,15 +25,11 @@ public class TeacherController {
         return teacherService.CreateExam(createExamDto);
     }
 
-    @PostMapping("/exam/changeInfo")
-    public ResponseResult ChangeExamController(@RequestBody ChangeExamDto changeExamDto){
-        return teacherService.ChangeExam(changeExamDto);
-    }
+//    @PostMapping("/exam/changeInfo")
+//    public ResponseResult ChangeExamController(@RequestBody ChangeExamDto changeExamDto){
+//        return teacherService.ChangeExam(changeExamDto);
+//    }
 
-    @PostMapping ("/exam/uploadPaper")
-    public ResponseResult UploadExamController(@RequestBody UploadExamDto uploadExamDto){
-        return teacherService.UploadExam(uploadExamDto);
-    }
     @PostMapping("/exam/addStu")
     public ResponseResult  AddStudentController(@RequestBody AddStudentDto addStudentDto){
         return teacherService.AddStudent(addStudentDto);
@@ -60,6 +54,11 @@ public class TeacherController {
     @GetMapping("/exam/getlist")
     public ResponseResult  GetExamController(){
         return teacherService.getExam();
+    }
+
+    @GetMapping("/getstu")
+    public ResponseResult GetStudentController(){
+        return teacherService.getStudent();
     }
 }
 

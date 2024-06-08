@@ -101,13 +101,20 @@ export const constantRoutes = [
     component: Layout,
     name: 'TeacherM',
     redirect: '/teacherm/vexam',
-    meta: { title: 'View', icon: 'tree', belong: 'teacher' },
+    meta: { title: 'Manage', icon: 'tree', belong: 'teacher' },
     children: [
       {
         path: 'cexam',
         component: () => import('@/views/exam/createExam'),
         name: 'CreateExam',
         meta: { title: 'CreateExam', icon: 'tree', belong: 'teacher' }
+      },
+      {
+        path: 'addstu',
+        name: "AddStudent",
+        component: () => import('../views/exam/addStu'),
+        hidden: true,
+        meta: { title: 'AddStudent', icon: 'tree', belong: 'teacher' }
       }
     ]
   },

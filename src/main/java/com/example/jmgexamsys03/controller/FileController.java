@@ -102,8 +102,8 @@ public class FileController {
 
         UpdateWrapper<Exam> uwe = new UpdateWrapper<>();
         uwe.eq("eid",noweid).set("exampaper","/mfile/epaper/"+fname);
-        int tmp = examMapper.update(null,uwe);
-        System.out.println("tmp = "+ tmp);
+
+        System.out.println(examMapper.update(null,uwe));
         return ResponseResult.okResult();
     }
     public void saveFile(MultipartFile f,String path,String filename) throws IOException{

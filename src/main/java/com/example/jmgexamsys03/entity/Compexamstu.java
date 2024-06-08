@@ -13,8 +13,10 @@ public class Compexamstu {
     private long  sid;
     private long  eid;
     private String anspaper;
-    public Compexamstu(long sid,long eid){
+    private String sekey;
+    public Compexamstu(long sid,long eid,String sekey){
         this.sid=sid;
         this.eid=eid;
+        this.sekey = sekey;
     }
 }

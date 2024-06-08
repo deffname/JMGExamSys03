@@ -1,12 +1,20 @@
 <template>
   <div>
-    <el-table :data="tableData" strip border style="width: 100%">
+    <el-table
+      :data="tableData"
+      strip
+      border
+      style="width: 100%"
+      :default-sort="{ prop: 'sdate', order: 'descending' }"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column
-        v-for="(row, index) in computedColumns"
+        v-for="(row, index) in defaultColumns"
         :key="index"
         :label="row.label"
         :prop="row.prop"
         :width="row.width"
+        :sortable="row.sortable"
       >
       </el-table-column>
       <el-table-column label="操作" width="150" v-if="isNotStudent">
@@ -30,43 +38,56 @@
   </div>
 </template>
 
-<script lang="jsx">
+<script>
+import { getExam } from "@/api/teacher";
+import router from "@/router";
+
 export default {
   created() {
     console.log("查看考试界面启动");
+    getExam()
+      .then((response) => {
+        // 用map便利整个返回的列表，并创建一个新的列表去储存想要储存的信息
+        const transformedData = response.data.map((e) => ({
+          eid: e.eid,
+          ename: e.examname,
+          sdate: this.formatDate(e.starttime),
+          edate: this.formatDate(e.endtime),
+        }));
+        this.tableData = transformedData;
+      })
+      .catch(() => {
+        this.$message.error("请求考试列表失败，请刷新界面重新尝试");
+      });
   },
   data() {
     return {
-      tableData: [
-        {
-          eid: 0,
-          date: "0000-00-00",
-          examname: "测试考试",
-          address: "暂缺",
-        },
-        {
-          eid: 0,
-          date: "0000-00-00",
-          examname: "测试考试",
-          address: "暂缺",
-        },
-      ],
+      tableData: [],
 
       defaultColumns: [
         {
           prop: "eid",
           label: "考试编号",
           width: "150",
+          sortable: true,
         },
         {
-          prop: "date",
-          label: "考试日期",
-          width: "150",
-        },
-        {
-          prop: "examname",
+          prop: "ename",
           label: "考试名称",
           width: "150",
+          sortable: true,
+        },
+        {
+          prop: "sdate",
+          label: "开始时间",
+          width: "150",
+          sortable: true,
+        },
+        {
+          prop: "edate",
+          label: "结束时间",
+          width: "150",
+          sortable: false,
         },
       ],
     };
@@ -75,23 +96,52 @@ export default {
     urole() {
       return this.$store.getters.urole;
     },
-    isNotStudent(){
-      return this.urole !='student'
+    isNotStudent() {
+      return this.urole != "student";
     },
-    computedColumns() {
-      console.log("vexam计算属性栏被调用");
-      const columns = this.defaultColumns;
-      return columns;
-    },
+    // computedColumns() {
+    //   console.log("vexam计算属性栏被调用");
+    //   const columns = this.defaultColumns;
+    //   return columns;
+    // },
   },
   methods: {
-    manageExam(row) {},
-    deleteExam(row){},
-    takeExam(row){
-      console.log('学生点击对应考试，要进入考试界面');
-      this.$router.push('/studentv/stuexam');
-      console.log('跳转到考试界面完成');
-    }
+    manageExam(row) {
+      console.log("教师编辑考试界面的row = ",row);
+      this.$router.push({
+        path: "/teacherm/addstu",
+        query: { id: row.eid },
+      });
+    },
+    deleteExam(row) {},
+    takeExam(row) {
+      console.log("学生点击对应考试，要进入考试界面");
+      this.$router.push("/studentv/stuexam");
+      console.log("跳转到考试界面完成");
+    },
+
+    formatDate(isoString) {
+      // 创建一个Date对象
+      const date = new Date(isoString);
+
+      // 确保日期是有效的
+      if (isNaN(date.getTime())) {
+        throw new Error("Invalid date string");
+      }
+
+      // 使用Date对象的方法来获取各个部分
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份从0开始，所以需要+1，并使用padStart补零
+      const day = String(date.getDate()).padStart(2, "0"); // 使用padStart补零
+      const hours = String(date.getHours()).padStart(2, "0"); // 使用padStart补零
+      const minutes = String(date.getMinutes()).padStart(2, "0"); // 使用padStart补零
+      const seconds = String(date.getSeconds()).padStart(2, "0"); // 使用padStart补零
+
+      // 拼接字符串
+      const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+      return formattedDate;
+    },
   },
 };
 </script>

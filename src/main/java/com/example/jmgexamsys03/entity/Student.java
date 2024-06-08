@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class Student {
     @TableId(type = IdType.AUTO)
     private long sid;
+    private String sname;
 }
