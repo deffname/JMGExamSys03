@@ -3,9 +3,11 @@ package com.example.jmgexamsys03.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
+import com.example.jmgexamsys03.entity.Compexamstu;
 import com.example.jmgexamsys03.entity.Exam;
 import com.example.jmgexamsys03.entity.User;
 import com.example.jmgexamsys03.mapper.ExamMapper;
+import com.example.jmgexamsys03.mapper.ExamStuMapper;
 import com.example.jmgexamsys03.mapper.StudentMapper;
 import com.example.jmgexamsys03.mapper.UserMapper;
 import com.example.jmgexamsys03.utils.UserThreadLocal;
@@ -41,6 +43,8 @@ public class FileController {
     private UserMapper userMapper;
     @Autowired
     private ExamMapper examMapper;
+    @Autowired
+    private ExamStuMapper examStuMapper;
 
     @PostMapping(value = "/uppic")
     public ResponseEntity<Object> uploadPic(MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) throws IOException{
@@ -94,7 +98,7 @@ public class FileController {
         //获取当前时间并作为时间戳给文件夹命名
         String timeStamp1 = nowtime.format(new Date());
 
-        fname = timeStamp1+fname;
+        fname = noweid+"_"+timeStamp1+fname;
         System.out.println("文件名称为"+fname);
         String path = "D:/user_app/mfile/epaper/";
         System.out.println("uppic 中 path = " + path);
@@ -106,6 +110,30 @@ public class FileController {
         System.out.println(examMapper.update(null,uwe));
         return ResponseResult.okResult();
     }
+
+    @PostMapping("upAnsfile")
+    public ResponseResult uploadAnsPaper(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response)throws IOException{
+        String fname = file.getOriginalFilename();
+
+        // 获取当前考试的id号码
+        String nsekey = request.getHeader("sekey");
+        nowtime =new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        //获取当前时间并作为时间戳给文件夹命名
+        String timeStamp1 = nowtime.format(new Date());
+
+        fname = nsekey+"_"+timeStamp1+fname;
+        System.out.println("文件名称为"+fname);
+        String path = "D:/user_app/mfile/anspaper/";
+        System.out.println("uppic 中 path = " + path);
+        saveFile(file,path,fname);
+
+        UpdateWrapper<Compexamstu> uwe = new UpdateWrapper<>();
+        uwe.eq("sekey",nsekey).set("anspaper","/mfile/epaper/"+fname);
+
+        System.out.println(examStuMapper.update(null,uwe));
+        return ResponseResult.okResult();
+    }
+
     public void saveFile(MultipartFile f,String path,String filename) throws IOException{
         File upDir = new File(path);
         if(!upDir.exists()){

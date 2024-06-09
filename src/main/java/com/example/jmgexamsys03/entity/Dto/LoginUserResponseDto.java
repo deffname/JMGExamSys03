@@ -11,5 +11,6 @@ public class LoginUserResponseDto {
 
     private String accessToken;
     private String role;
+    private long rid;
 
 }

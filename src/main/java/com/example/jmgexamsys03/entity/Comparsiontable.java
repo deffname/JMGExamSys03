@@ -1,5 +1,6 @@
 package com.example.jmgexamsys03.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @TableName("comparsiontable")
 public class Comparsiontable {
+    @TableId
     private long uid;
     private Long sid;
     private Long tid;

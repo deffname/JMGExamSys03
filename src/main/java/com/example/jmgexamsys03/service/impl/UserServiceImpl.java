@@ -126,8 +126,19 @@ public class UserServiceImpl implements UserService {
         //将token插入redis,1天后过期
         redisCache.setCacheObject("TOKEN_"+token, JSON.toJSONString(user),1, TimeUnit.DAYS);
 
+        long rid = 0;
+        String nrole = user.getIdentity();
+        if (nrole.equals("student")) {
+            rid = comparsiontableMapper.selectById(user.getUid()).getSid();
+        } else if (nrole.equals("teacher")) {
+            rid = comparsiontableMapper.selectById(user.getUid()).getTid();
+        } else if (nrole.equals("admin")) {
+            rid = comparsiontableMapper.selectById(user.getUid()).getAid();
+        } else {
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"账户身份不存在");
+        }
         // 返回对应用户的token和身份
-        return ResponseResult.okResult(new LoginUserResponseDto(token,user.getIdentity()));
+        return ResponseResult.okResult(new LoginUserResponseDto(token,nrole,rid));
     }
 
     /**
@@ -141,8 +152,20 @@ public class UserServiceImpl implements UserService {
         if(tmp == null){
             return new ResponseResult<>().error(AppHttpCodeEnum.LOGIN_ERROR.getCode(),"请重新登录");
         }
-        
-        return ResponseResult.okResult(new infoResponseDto(tmp.getUsername(),tmp.getIdentity(),tmp.getAvatar()));
+
+        long rid = 0;
+        String nrole = tmp.getIdentity();
+        if (nrole.equals("student")) {
+            rid = comparsiontableMapper.selectById(tmp.getUid()).getSid();
+        } else if (nrole.equals("teacher")) {
+            rid = comparsiontableMapper.selectById(tmp.getUid()).getTid();
+        } else if (nrole.equals("admin")) {
+            rid = comparsiontableMapper.selectById(tmp.getUid()).getAid();
+        } else {
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"账户身份不存在");
+        }
+
+        return ResponseResult.okResult(new infoResponseDto(tmp.getUsername(),tmp.getIdentity(),tmp.getAvatar(),rid));
     }
 
     /**

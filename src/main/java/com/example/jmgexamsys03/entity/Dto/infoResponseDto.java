@@ -11,4 +11,5 @@ public class infoResponseDto {
     private String username;
     private String identity;
     private String avatar;
+    private long rid;
 }

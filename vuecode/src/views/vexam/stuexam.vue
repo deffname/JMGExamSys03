@@ -22,16 +22,34 @@
           <el-button style="width: 100%"> 下载试卷 </el-button>
         </el-col>
       </el-row>
+
       <el-row style="margin-top: 15px">
         <el-col :span="24">
-          <el-button style="width: 100%"> 上传答案 </el-button>
+          <el-upload
+            class="upload-demo"
+            action="#"
+            drag
+            multiple
+            :headers="headers"
+            :auto-upload="false"
+            :file-list="fileList"
+            :on-change="handleChange"
+          >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或<em>点击上传</em>
+            </div>
+            <div class="el-upload__tip" slot="tip">
+              上传 doc || docx || pdf 格式文件
+            </div>
+          </el-upload>
         </el-col>
       </el-row>
 
       <el-row style="margin-top: 15px">
         <el-col :span="24">
-          <el-button style="width: 100%" @click="showMessage">
-            显示信息
+          <el-button style="width: 100%" @click="uploadAns">
+            上传答案
           </el-button>
         </el-col>
       </el-row>
@@ -40,6 +58,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import { getToken } from "@/utils/auth";
+
 export default {
   created() {
     console.log("学生参加考试界面触发", this.$route.query.row);
@@ -59,9 +80,17 @@ export default {
       edate: "",
       remainingTime: "",
       timeTitle: "距离考试开始还有",
+      fileList: [],
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     };
   },
   methods: {
+    handleChange(file, fileList) {
+      //文件数量改变
+      this.fileList = fileList;
+    },
     hilarity() {
       if (this.timeTitle == "距离考试开始还有") {
         this.updateRemainingTime();
@@ -72,9 +101,6 @@ export default {
           duration: 0,
         });
       }
-    },
-    showMessage() {
-      console.log(this.deadline3);
     },
 
     updateRemainingTime() {
@@ -97,6 +123,31 @@ export default {
         this.remainingTime = 0;
         this.timeTitle = "考试已结束";
       }
+    },
+
+    uploadAns() {
+      var param = new FormData();
+      this.fileList.forEach((val, index) => {
+        // 根据需要更改字段名，例如："file" + (index + 1)
+        param.append("file", val.raw);
+      });
+
+      axios
+        .post(process.env.VUE_APP_BASE_API + "/upAnsfile", param, {
+          headers: {
+            token: getToken(),
+            sekey: this.$route.query.row.eid + "_" + this.$store.getters.rid,
+          },
+        })
+        .then(() => {
+          this.$message({
+            message: "上传答案成功",
+            type: "success",
+          });
+        })
+        .catch(() => {
+          this.$message.error("答案上传失败，请重新尝试");
+        });
     },
   },
 };

@@ -5,6 +5,7 @@ const getters = {
   avatar: state => state.user.avatar,
   name: state => state.user.name,
   urole: state => state.user.urole,
-  baseApi: state => state.api.baseApi
+  baseApi: state => state.api.baseApi,
+  rid: state => state.user.rid
 }
 export default getters

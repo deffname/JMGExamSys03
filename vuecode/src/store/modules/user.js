@@ -9,7 +9,8 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     urole: 'student',
-    avatar: ''
+    avatar: '',
+    rid: ''
   }
 }
 
@@ -33,6 +34,9 @@ const mutations = {
   SET_UROLE: (state, urole) => {
     state.urole = urole
     console.log('此时的state ', state)
+  },
+  SET_URID: (state, rid) => {
+    state.rid = rid
   }
 }
 
@@ -52,6 +56,7 @@ const actions = {
           commit('SET_TOKEN', data.accessToken)
           commit('SET_UROLE', data.identity)
           commit('SET_NAME', data.username)
+          commit('SET_URID', data.rid)
           setToken(data.accessToken)
           resolve()
         }).catch(error => {
@@ -75,6 +80,7 @@ const actions = {
         commit('SET_NAME', username)
         commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
         commit('SET_UROLE', identity)
+        commit('SET_URID', data.rid)
 
         resolve(data)
       }).catch(error => {
