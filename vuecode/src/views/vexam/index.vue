@@ -41,24 +41,42 @@
 
 <script>
 import { getExam, deleteExam } from "@/api/teacher";
+import { getSExam } from "@/api/student";
 
 export default {
   created() {
     console.log("查看考试界面启动");
-    getExam()
-      .then((response) => {
-        // 用map便利整个返回的列表，并创建一个新的列表去储存想要储存的信息
-        const transformedData = response.data.map((e) => ({
-          eid: e.eid,
-          ename: e.examname,
-          sdate: this.formatDate(e.starttime),
-          edate: this.formatDate(e.endtime),
-        }));
-        this.tableData = transformedData;
-      })
-      .catch(() => {
-        this.$message.error("请求考试列表失败，请刷新界面重新尝试");
-      });
+    if (this.urole == "teacher") {
+      // 如果不是学生就执行下面的命令
+      getExam()
+        .then((response) => {
+          // 用map便利整个返回的列表，并创建一个新的列表去储存想要储存的信息
+          const transformedData = response.data.map((e) => ({
+            eid: e.eid,
+            ename: e.examname,
+            sdate: this.formatDate(e.starttime),
+            edate: this.formatDate(e.endtime),
+          }));
+          this.tableData = transformedData;
+        })
+        .catch(() => {
+          this.$message.error("请求考试列表失败，请刷新界面重新尝试");
+        });
+    } else if (this.urole == "student") {
+      getSExam()
+        .then((response) => {
+          const transformedData = response.data.map((e) => ({
+            eid: e.eid,
+            ename: e.examname,
+            sdate: this.formatDate(e.starttime),
+            edate: this.formatDate(e.endtime),
+          }));
+          this.tableData = transformedData;
+        })
+        .catch(() => {
+          this.$message.error("请求考试列表失败，请刷新界面重新尝试");
+        });
+    }
   },
   data() {
     return {
@@ -130,7 +148,10 @@ export default {
     },
     takeExam(row) {
       console.log("学生点击对应考试，要进入考试界面");
-      this.$router.push("/studentv/stuexam");
+      this.$router.push({
+        path: "/studentv/stuexam",
+        query: { row: row },
+      });
       console.log("跳转到考试界面完成");
     },
 

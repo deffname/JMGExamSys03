@@ -213,7 +213,7 @@ public class TeacherServiceImpl implements TeacherService{
     }
 
     public ResponseResult getExam(){
-        System.out.println("获取考试服务被调用");
+//        System.out.println("获取考试服务被调用");
         long uid = UserThreadLocal.get().getUid();
         QueryWrapper<Comparsiontable> qwt = new QueryWrapper<>();
         qwt.eq("uid",uid);

@@ -6,18 +6,11 @@ import com.example.jmgexamsys03.entity.Student;
 public interface StudentService {
 
     /**
-     * login:(学生登录). <br/>
-     * @param student
-     * @return ResultModel	返回数据模型
-     */
-    ResponseResult login(Student student);
-
-    /**
      * queryExams:(根据学生id查看所对应的考试). <br/>
-     * @param id
+     * @param
      * @return ResultModel
      */
-    ResponseResult queryExams(String id);
+    ResponseResult queryExams();
 
     /**
      * displayQuestion:(根据考试的id来获取试卷信息). <br/>
