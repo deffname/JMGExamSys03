@@ -13,6 +13,13 @@ public interface StudentService {
     ResponseResult queryExams();
 
     /**
+     * queryExams:(根据id查看单个考试). <br/>
+     * @param
+     * @return ResultModel
+     */
+    ResponseResult queryExam(long eid);
+
+    /**
      * displayQuestion:(根据考试的id来获取试卷信息). <br/>
      * @param eId
      * @return ResultModel

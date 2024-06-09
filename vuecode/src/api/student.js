@@ -7,3 +7,13 @@ export function getSExam() {
 
   })
 }
+
+export function getSExamPaper(eid) {
+  return request({
+    url: '/student/getExampaper',
+    method: 'get',
+    params: {
+      eid: eid
+    }
+  })
+}

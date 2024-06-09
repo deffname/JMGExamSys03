@@ -19,7 +19,9 @@
       </el-row>
       <el-row style="margin-top: 15px">
         <el-col :span="24">
-          <el-button style="width: 100%"> 下载试卷 </el-button>
+          <el-button style="width: 100%" @click="downloadEPaper">
+            下载试卷
+          </el-button>
         </el-col>
       </el-row>
 
@@ -60,16 +62,17 @@
 <script>
 import axios from "axios";
 import { getToken } from "@/utils/auth";
+import { getSExamPaper } from "@/api/student";
 
 export default {
   created() {
     console.log("学生参加考试界面触发", this.$route.query.row);
+
     this.sdate = this.$route.query.row.sdate;
     this.edate = this.$route.query.row.edate;
     console.log("当前sdate为", this.sdate);
     console.log("当前edate为", this.edate);
     this.updateRemainingTime();
-    console.log("当前remaintime为", this.remainingTime, "data.now", Date.now());
   },
   beforeDestroy() {
     clearInterval(this.timer); // 组件销毁前清除定时器
@@ -90,6 +93,22 @@ export default {
     handleChange(file, fileList) {
       //文件数量改变
       this.fileList = fileList;
+    },
+    downloadEPaper() {
+      // const param = { filepath: this.$route.query.row.exampaper };
+      getSExamPaper(this.$route.query.row.eid)
+        .then((res) => {
+          var url =
+            process.env.VUE_APP_BASE_API +
+            "/downloadEPaper?filePath=" +
+            res.data.exampaper;
+          window.open(url);
+        })
+        .catch(() => {
+          this.$message.error("获取试卷地址失败");
+        });
+
+      // axios.get(process.env.VUE_APP_BASE_API + this.$route.query.row.exampaper);
     },
     hilarity() {
       if (this.timeTitle == "距离考试开始还有") {

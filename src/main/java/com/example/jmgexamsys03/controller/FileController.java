@@ -3,6 +3,7 @@ package com.example.jmgexamsys03.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
+import com.example.jmgexamsys03.domain.enums.AppHttpCodeEnum;
 import com.example.jmgexamsys03.entity.Compexamstu;
 import com.example.jmgexamsys03.entity.Exam;
 import com.example.jmgexamsys03.entity.User;
@@ -11,19 +12,16 @@ import com.example.jmgexamsys03.mapper.ExamStuMapper;
 import com.example.jmgexamsys03.mapper.StudentMapper;
 import com.example.jmgexamsys03.mapper.UserMapper;
 import com.example.jmgexamsys03.utils.UserThreadLocal;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -133,6 +131,38 @@ public class FileController {
         System.out.println(examStuMapper.update(null,uwe));
         return ResponseResult.okResult();
     }
+
+    @GetMapping("/downloadEPaper")
+    public ResponseResult downloadFile(HttpServletResponse response,String filePath) throws IOException {
+        System.out.println("下载界面启动");
+        // 清空输出流
+        response.reset();
+        response.setContentType("application/x-download;charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment;filename="+ new String(filePath.getBytes("utf-8"), "utf-8"));
+
+        OutputStream os = response.getOutputStream();
+        //下载文件的路径
+        String downPath = "D:/user_app"+filePath;
+        //读取目标文件
+        File f = new File(downPath);
+        //创建输入流
+        InputStream is = new FileInputStream(f);
+        //做一些业务判断，可以封装到实体类返回具体信息
+        if (is == null) {
+            System.out.println("文件不存在");
+            ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"文件不存在");
+        }
+        // 利用IOUtils将输入流的内容 复制到输出流
+        // org.apache.tomcat.util.http.fileupload.IOUtils
+        // 项目搭建是自动集成了这个类 直接使用即可
+        IOUtils.copy(is, os);
+        os.flush();
+        is.close();
+        os.close();
+
+        return ResponseResult.okResult();
+    }
+
 
     public void saveFile(MultipartFile f,String path,String filename) throws IOException{
         File upDir = new File(path);

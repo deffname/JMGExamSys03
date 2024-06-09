@@ -2,6 +2,7 @@ package com.example.jmgexamsys03.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
+import com.example.jmgexamsys03.domain.enums.AppHttpCodeEnum;
 import com.example.jmgexamsys03.entity.Comparsiontable;
 import com.example.jmgexamsys03.entity.Compexamstu;
 import com.example.jmgexamsys03.entity.Exam;
@@ -15,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -44,6 +47,17 @@ public class StudentServiceImpl implements StudentService {
             }
         }
         return ResponseResult.okResult(retl);
+    }
+
+    @Override
+    public ResponseResult queryExam(long eid) {
+        String nexampaper = examMapper.selectById(eid).getExampaper();
+        if(nexampaper == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"试卷尚未上传");
+        }
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("exampaper",nexampaper);
+        return ResponseResult.okResult(resultMap);
     }
 
     @Override
