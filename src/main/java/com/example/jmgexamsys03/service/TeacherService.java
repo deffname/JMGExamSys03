@@ -48,7 +48,7 @@ public interface TeacherService {
      * @param
      * @return通用响应类型
      */
-    ResponseResult StartExam();
+    ResponseResult StartExam(long eid);
     /**
      * 考试中查看考试详情
      * @param checkExamDto
@@ -60,7 +60,7 @@ public interface TeacherService {
      * @param
      * @return通用响应类型
      */
-    ResponseResult EndExam();
+    ResponseResult EndExam(long eid);
 
     /**
      * 教师获取考试列表
@@ -68,7 +68,7 @@ public interface TeacherService {
      * @return通用响应类型
      */
 
-    ResponseResult getExam();
+    ResponseResult getExam(long tid);
 
     /**
      * 教师获取全部学生列表

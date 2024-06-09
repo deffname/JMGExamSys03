@@ -8,10 +8,11 @@ export function createExam(data) {
   })
 }
 
-export function getExam() {
+export function getExam(tid) {
   return request({
     url: '/teacher/exam/getlist',
     method: 'get',
+    params: { tid: tid }
   })
 }
 
@@ -53,5 +54,21 @@ export function deleteStu(data) {
     url: '/teacher/exam/deleteStu',
     method: 'post',
     data
+  })
+}
+
+export function startExam(eid) {
+  return request({
+    url: '/teacher/exam/start',
+    method: 'post',
+    params: { eid: eid }
+  })
+}
+
+export function endExam(eid) {
+  return request({
+    url: '/teacher/exam/end',
+    method: 'post',
+    params: { eid: eid }
   })
 }

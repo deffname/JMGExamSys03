@@ -66,6 +66,11 @@ import { getSExamPaper } from "@/api/student";
 
 export default {
   created() {
+    console.log("当前路由状态为", this.$route);
+    if (this.$route.query.row.sdate === undefined) {
+      console.log("此时query没有数据，需要重置");
+      this.$router.push({ path: "/studentv/vexam" });
+    }
     console.log("学生参加考试界面触发", this.$route.query.row);
 
     this.sdate = this.$route.query.row.sdate;

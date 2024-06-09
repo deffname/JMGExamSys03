@@ -3,6 +3,8 @@
     <div style="padding-top: 20px; padding-bottom: 10px">
       <el-button @click="uploadList">点击上传</el-button>
       <el-button @click="uploadList">文件上传</el-button>
+      <el-button @click="sExam">开始考试</el-button>
+      <el-button @click="eExam">结束考试</el-button>
       <el-button v-if="stuflag == 'checkedstu'" @click="uploadList"
         >答案下载</el-button
       >
@@ -36,7 +38,14 @@
 </template>
 
 <script>
-import { getStudent, addStudent, getEStudent, deleteStu } from "@/api/teacher";
+import {
+  getStudent,
+  addStudent,
+  getEStudent,
+  deleteStu,
+  startExam,
+  endExam,
+} from "@/api/teacher";
 export default {
   created() {
     console.log("当前考试的编号是", this.$route.query.id);
@@ -122,6 +131,30 @@ export default {
             this.$message.error("删除失败，请重新尝试");
           });
       }
+    },
+    sExam() {
+      startExam(this.$route.query.id)
+        .then(() => {
+          this.$message({
+            message: "开启对应考试成功",
+            type: "success",
+          });
+        })
+        .catch((error) => {
+          this.$message.error(error.msg);
+        });
+    },
+    eExam() {
+      endExam(this.$route.query.id)
+        .then(() => {
+          this.$message({
+            message: "结束对应考试成功",
+            type: "success",
+          });
+        })
+        .catch((error) => {
+          this.$message.error(error.msg);
+        });
     },
   },
 };

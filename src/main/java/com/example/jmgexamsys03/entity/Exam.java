@@ -23,6 +23,7 @@ public class Exam {
     private String exampaper;
     // 开创这个课程的教师的id
     private long tid;
+    private String state = "notstart";
 
     public Exam(Date starttime,Date endtime,String name,long tid){
         this.starttime=starttime;

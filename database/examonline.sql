@@ -49,10 +49,13 @@ CREATE TABLE IF NOT EXISTS `comparsiontable` (
 CREATE TABLE IF NOT EXISTS `compexamstu` (
   `sid` bigint NOT NULL,
   `eid` bigint NOT NULL,
-  `anspaper` binary(50) DEFAULT NULL,
-  KEY `FK_eid_examc` (`eid`),
+  `anspaper` varchar(255) DEFAULT NULL,
+  `sekey` varchar(50) NOT NULL,
+  PRIMARY KEY (`sekey`),
   KEY `FK_sid_stucc` (`sid`),
-  CONSTRAINT `FK_eid_examc` FOREIGN KEY (`eid`) REFERENCES `exam` (`eid`)
+  KEY `FK_eid_examc` (`eid`),
+  CONSTRAINT `FK_eid_examc` FOREIGN KEY (`eid`) REFERENCES `exam` (`eid`) ON DELETE CASCADE,
+  CONSTRAINT `FK_sid_stucc` FOREIGN KEY (`sid`) REFERENCES `student` (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
@@ -64,19 +67,21 @@ CREATE TABLE IF NOT EXISTS `exam` (
   `examname` varchar(50) DEFAULT NULL,
   `starttime` datetime DEFAULT NULL,
   `endtime` datetime DEFAULT NULL,
-  `exampaper` binary(50) DEFAULT NULL,
+  `exampaper` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `state` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'notstart',
   PRIMARY KEY (`eid`),
   KEY `FK_tid_teae` (`tid`),
   CONSTRAINT `FK_tid_teae` FOREIGN KEY (`tid`) REFERENCES `teacher` (`tid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
 -- 导出  表 examonline.student 结构
 CREATE TABLE IF NOT EXISTS `student` (
   `sid` bigint NOT NULL AUTO_INCREMENT,
+  `sname` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -84,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `student` (
 CREATE TABLE IF NOT EXISTS `teacher` (
   `tid` bigint NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`tid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
@@ -98,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `salt` varchar(50) DEFAULT NULL,
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 

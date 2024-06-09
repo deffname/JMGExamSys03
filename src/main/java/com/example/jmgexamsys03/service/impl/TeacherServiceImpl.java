@@ -171,11 +171,21 @@ public class TeacherServiceImpl implements TeacherService{
         return ResponseResult.okResult("删除成功");
     }
     @Override
-    public ResponseResult StartExam(){
+    public ResponseResult StartExam(long eid){
         User user = UserThreadLocal.get();
         if (!user.getIdentity().equals("teacher")){
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
         }
+        Exam examtmp = examMapper.selectById(eid);
+        if(examtmp == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"考试不存在");
+        }
+        if(!examtmp.getState().equals("notstart")){
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"考试已经开始或结束，无法开始考试");
+        }
+        System.out.println("当前考试的时间为"+examtmp.getStarttime());
+        examtmp.setState("starting");
+        examMapper.update(examtmp,new QueryWrapper<Exam>().eq("eid",eid));
         return ResponseResult.okResult("开启成功");
     }
     @Override
@@ -204,20 +214,28 @@ public class TeacherServiceImpl implements TeacherService{
         return ResponseResult.okResult("考试人数为"+stuSum);
     }
     @Override
-    public ResponseResult EndExam(){
+    public ResponseResult EndExam(long eid){
         User user = UserThreadLocal.get();
         if (!user.getIdentity().equals("teacher")){
             return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
         }
+
+        Exam examtmp = examMapper.selectById(eid);
+        if(examtmp == null){
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"考试不存在");
+        }
+        if(!examtmp.getState().equals("starting")){
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"考试尚未开始或者已经结束，无法结束考试");
+        }
+
+        examtmp.setState("started");
+        examMapper.update(examtmp,new QueryWrapper<Exam>().eq("eid",eid));
         return ResponseResult.okResult("结束成功");
     }
 
-    public ResponseResult getExam(){
+    public ResponseResult getExam(long tid){
 //        System.out.println("获取考试服务被调用");
-        long uid = UserThreadLocal.get().getUid();
-        QueryWrapper<Comparsiontable> qwt = new QueryWrapper<>();
-        qwt.eq("uid",uid);
-        long tid = comparsiontableMapper.selectOne(qwt).getTid();
+
         QueryWrapper<Exam> qwe = new QueryWrapper<>();
         qwe.eq("tid",tid);
         List<Exam> exams = examMapper.selectList(qwe);

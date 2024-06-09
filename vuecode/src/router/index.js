@@ -100,7 +100,7 @@ export const constantRoutes = [
     path: '/teacherm',
     component: Layout,
     name: 'TeacherM',
-    redirect: '/teacherm/vexam',
+    redirect: '/teacherm/cexam',
     meta: { title: 'Manage', icon: 'tree', belong: 'teacher' },
     children: [
       {

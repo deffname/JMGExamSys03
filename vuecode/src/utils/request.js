@@ -16,8 +16,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    console.log("请求拦截器被触发，此时url为", process.env.VUE_APP_BASE_API)
-    console.log("请求拦截器被触发，此时url为", process.env)
+    console.log("请求拦截器被触发，此时url为", process.env, config.url)
     if (store.getters.token) {
       // 检查是否有一个token存在
       // 如果存在token，就把token加在请求头里面，下面是一个自定义的headers键

@@ -48,7 +48,7 @@ export default {
     console.log("查看考试界面启动");
     if (this.urole == "teacher") {
       // 如果不是学生就执行下面的命令
-      getExam()
+      getExam(this.$store.getters.rid)
         .then((response) => {
           // 用map便利整个返回的列表，并创建一个新的列表去储存想要储存的信息
           const transformedData = response.data.map((e) => ({
@@ -56,6 +56,7 @@ export default {
             ename: e.examname,
             sdate: this.formatDate(e.starttime),
             edate: this.formatDate(e.endtime),
+            estate: e.state,
           }));
           this.tableData = transformedData;
         })
@@ -70,6 +71,7 @@ export default {
             ename: e.examname,
             sdate: this.formatDate(e.starttime),
             edate: this.formatDate(e.endtime),
+            estate: e.state,
           }));
           this.tableData = transformedData;
         })
@@ -108,6 +110,12 @@ export default {
           width: "150",
           sortable: false,
         },
+        {
+          prop: "estate",
+          label: "考试状态",
+          width: "150",
+          sortable: true,
+        },
       ],
     };
   },
@@ -121,6 +129,9 @@ export default {
     // computedColumns() {
     //   console.log("vexam计算属性栏被调用");
     //   const columns = this.defaultColumns;
+    //   if (!this.isNotStudent) {
+    //     columns.push();
+    //   }
     //   return columns;
     // },
   },
@@ -148,12 +159,16 @@ export default {
       this.checkedExam = val.map((item) => item.eid);
     },
     takeExam(row) {
-      console.log("学生点击对应考试，要进入考试界面");
-      this.$router.push({
-        path: "/studentv/stuexam",
-        query: { row: row },
-      });
-      console.log("跳转到考试界面完成");
+      // console.log("学生点击对应考试，要进入考试界面，state = ", row);
+      if (row.estate == "starting") {
+        this.$router.push({
+          path: "/studentv/stuexam",
+          query: { row: row },
+        });
+        console.log("跳转到考试界面完成");
+      } else {
+        this.$message.error("当前考试未开始，无法进入考试界面");
+      }
     },
 
     formatDate(isoString) {

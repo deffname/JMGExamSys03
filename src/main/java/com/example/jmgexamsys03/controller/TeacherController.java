@@ -41,22 +41,22 @@ public class TeacherController {
     public ResponseResult  DeleteExamController(@RequestBody DeleteExamDto ded){
         return teacherService.DeleteExam(ded.getEidl());
     }
-    @GetMapping("/exam/start")
-    public ResponseResult  StartExamController(){
-        return teacherService.StartExam();
+    @PostMapping("/exam/start")
+    public ResponseResult  StartExamController(@RequestParam long eid){
+        return teacherService.StartExam(eid);
     }
     @PostMapping("/examing/getInfo")
     public ResponseResult  CheckExamController(@RequestBody CheckExamDto checkExamDto){
         return teacherService.CheckExam(checkExamDto);
     }
-    @GetMapping("/exam/end")
-    public ResponseResult  EndExamController(){
-        return teacherService.EndExam();
+    @PostMapping("/exam/end")
+    public ResponseResult  EndExamController(@RequestParam long eid){
+        return teacherService.EndExam(eid);
     }
 
     @GetMapping("/exam/getlist")
-    public ResponseResult  GetExamController(){
-        return teacherService.getExam();
+    public ResponseResult  GetExamController(@RequestParam long tid){
+        return teacherService.getExam(tid);
     }
 
     @GetMapping("/getstu")
