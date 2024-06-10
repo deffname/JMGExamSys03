@@ -68,6 +68,11 @@ public class TeacherController {
         System.out.println("收到参数"+eid);
         return teacherService.getEStudent(Long.parseLong(eid));
     }
+
+    @PostMapping ("/exam/getAnsl")
+    public ResponseResult GetAnsL(@RequestBody getAnslDto getAnslDto){
+        return teacherService.getAnsL(getAnslDto.getSekeyl());
+    }
 }
 
 

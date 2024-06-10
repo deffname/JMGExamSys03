@@ -72,3 +72,16 @@ export function endExam(eid) {
     params: { eid: eid }
   })
 }
+
+/**
+ * 
+ * @param {里面是一个列表，装着 考试号_学号 的列表} msekeyl 
+ * @returns 对应sekey的答案的地址
+ */
+export function getAnsl(data) {
+  return request({
+    url: '/teacher/exam/getAnsl',
+    method: 'post',
+    data
+  })
+}

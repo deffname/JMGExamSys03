@@ -5,7 +5,7 @@
       <el-button @click="uploadList">文件上传</el-button>
       <el-button @click="sExam">开始考试</el-button>
       <el-button @click="eExam">结束考试</el-button>
-      <el-button v-if="stuflag == 'checkedstu'" @click="uploadList"
+      <el-button v-if="stuflag == 'checkedstu'" @click="downloadAns"
         >答案下载</el-button
       >
     </div>
@@ -45,7 +45,11 @@ import {
   deleteStu,
   startExam,
   endExam,
+  getAnsl,
 } from "@/api/teacher";
+
+import { getSExamPaper } from "@/api/student";
+
 export default {
   created() {
     console.log("当前考试的编号是", this.$route.query.id);
@@ -154,6 +158,43 @@ export default {
         })
         .catch((error) => {
           this.$message.error(error.msg);
+        });
+    },
+    downloadAns() {
+      console.log(
+        "发送获取答案前，此时考试id为",
+        this.$route.query.id,
+        " ",
+        this.checkedStu
+      );
+      const sekeyl = this.checkedStu.map((item) => {
+        return this.$route.query.id + "_" + item;
+      });
+      console.log("sekeyl = ", sekeyl);
+      getAnsl({ sekeyl: sekeyl })
+        .then((response) => {
+          console.log(response.data);
+          const ansl = response.data;
+          for (let key in ansl) {
+            if (ansl.hasOwnProperty(key) && ansl[key] !== null) {
+              console.log(`Key ${key} has a value: ${ansl[key]}`);
+              // 进行文件下载
+              var url =
+                process.env.VUE_APP_BASE_API +
+                "/downloadEPaper?filePath=" +
+                ansl[key];
+              window.open(url);
+            } else if (ansl.hasOwnProperty(key) && ansl[key] == null) {
+              this.$notify({
+                title: "提示",
+                message: "学号为" + key + "的学生尚未提交答案",
+                duration: 0,
+              });
+            }
+          }
+        })
+        .catch(() => {
+          this.$message.error("获取答案失败，请重新尝试");
         });
     },
   },

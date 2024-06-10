@@ -126,7 +126,7 @@ public class FileController {
         saveFile(file,path,fname);
 
         UpdateWrapper<Compexamstu> uwe = new UpdateWrapper<>();
-        uwe.eq("sekey",nsekey).set("anspaper","/mfile/epaper/"+fname);
+        uwe.eq("sekey",nsekey).set("anspaper","/mfile/anspaper/"+fname);
 
         System.out.println(examStuMapper.update(null,uwe));
         return ResponseResult.okResult();

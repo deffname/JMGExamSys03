@@ -3,10 +3,7 @@ package com.example.jmgexamsys03.service.impl;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 import com.example.jmgexamsys03.entity.*;
@@ -156,9 +153,7 @@ public class TeacherServiceImpl implements TeacherService{
                     return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"添加学生信息时出现错误");
                 }
             }
-
         }
-
         return ResponseResult.okResult("添加成功");
     }
     @Override
@@ -276,5 +271,20 @@ public class TeacherServiceImpl implements TeacherService{
 
         }
         return ResponseResult.okResult(retl);
+    }
+
+    @Override
+    public ResponseResult getAnsL(List<String> sekeyl) {
+        Map<Long,String> ret = new HashMap<>();
+        for (String nsekey:sekeyl){
+            Compexamstu tmp =  examStuMapper.selectById(nsekey);
+            if(tmp == null){
+                continue;
+            }
+            ret.put(tmp.getSid(),tmp.getAnspaper());
+        }
+
+//        examStuMapper.selectById(msekey).getAnspaper();
+        return ResponseResult.okResult(ret);
     }
 }

@@ -85,9 +85,10 @@ public interface TeacherService {
     ResponseResult getEStudent(long eid);
 
     /**
-     * 教师获取学生的答案
-     * @param registerUserDto
+     * 教师获取学生的答案文件所在的位置
+     * @param
      * @return通用响应类型
      */
+    ResponseResult getAnsL(List<String> sekeyl);
 
 }
