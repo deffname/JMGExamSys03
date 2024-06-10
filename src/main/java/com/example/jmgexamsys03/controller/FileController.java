@@ -12,6 +12,7 @@ import com.example.jmgexamsys03.mapper.ExamStuMapper;
 import com.example.jmgexamsys03.mapper.StudentMapper;
 import com.example.jmgexamsys03.mapper.UserMapper;
 import com.example.jmgexamsys03.utils.UserThreadLocal;
+import com.example.jmgexamsys03.utils.fileManage;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Date;
 
+
+/**
+ * 专门处理文件上传和下载的类，其中也包括删除文件的方法
+ */
 
 @RestController
 @CrossOrigin
@@ -86,6 +91,14 @@ public class FileController {
         );
     }
 
+    /**
+     * 处理教师上传试卷文件
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @PostMapping("upefile")
     public ResponseResult uploadEPaper(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response)throws IOException{
         String fname = file.getOriginalFilename();
@@ -102,12 +115,30 @@ public class FileController {
         System.out.println("uppic 中 path = " + path);
         saveFile(file,path,fname);
 
+        // 插入文件地址前先看看原先有没有考试文件，如果有的话就删除
+        QueryWrapper<Exam> qwe = new QueryWrapper<>();
+        qwe.eq("eid",noweid);
+        String tmppaper = examMapper.selectOne(qwe).getExampaper();
+        if(tmppaper != null){
+            System.out.println("上传"+noweid+"考试文件时存在文件，先删除，后添加");
+            fileManage.deleteFile(tmppaper);
+        }
+
         UpdateWrapper<Exam> uwe = new UpdateWrapper<>();
         uwe.eq("eid",noweid).set("exampaper","/mfile/epaper/"+fname);
 
         System.out.println(examMapper.update(null,uwe));
         return ResponseResult.okResult();
     }
+
+    /**
+     * 处理学生上传答案文件
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
 
     @PostMapping("upAnsfile")
     public ResponseResult uploadAnsPaper(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response)throws IOException{
@@ -124,6 +155,16 @@ public class FileController {
         String path = "D:/user_app/mfile/anspaper/";
         System.out.println("uppic 中 path = " + path);
         saveFile(file,path,fname);
+
+        // 插入文件地址前先看看原先有没有考试文件，如果有的话就删除
+        QueryWrapper<Compexamstu> qwes = new QueryWrapper<>();
+        qwes.eq("sekey",nsekey);
+        String tmppaper = examStuMapper.selectOne(qwes).getAnspaper();
+        if(tmppaper != null){
+            System.out.println("上传"+nsekey+"考试文件时存在文件，先删除，后添加");
+            fileManage.deleteFile(tmppaper);
+        }
+
 
         UpdateWrapper<Compexamstu> uwe = new UpdateWrapper<>();
         uwe.eq("sekey",nsekey).set("anspaper","/mfile/anspaper/"+fname);
@@ -173,4 +214,5 @@ public class FileController {
         File file = new File(path+filename);
         f.transferTo(file);
     }
+
 }

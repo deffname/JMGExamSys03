@@ -1,14 +1,43 @@
 <template>
   <div>
     <div style="padding-top: 20px; padding-bottom: 10px">
-      <el-button @click="uploadList">点击上传</el-button>
-      <el-button @click="uploadList">文件上传</el-button>
+      <el-button @click="uploadList">{{ showMessage }}</el-button>
+      <el-button @click="dialogVisible = true">试卷上传</el-button>
       <el-button @click="sExam">开始考试</el-button>
       <el-button @click="eExam">结束考试</el-button>
       <el-button v-if="stuflag == 'checkedstu'" @click="downloadAns"
         >答案下载</el-button
       >
     </div>
+
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-upload
+        class="upload-demo"
+        action="#"
+        drag
+        multiple
+        :headers="headers"
+        :auto-upload="false"
+        :file-list="fileList"
+        :on-change="handleChange"
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">
+          上传 doc || docx || pdf 格式文件
+        </div>
+      </el-upload>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="uploadEPaper">确认上传</el-button>
+      </span>
+    </el-dialog>
 
     <el-radio-group v-model="stuflag" size="big" style="margin-bottom: 30px">
       <el-radio-button label="allstu">所有学生</el-radio-button>
@@ -47,8 +76,8 @@ import {
   endExam,
   getAnsl,
 } from "@/api/teacher";
-
-import { getSExamPaper } from "@/api/student";
+import axios from "axios";
+import { getToken } from "@/utils/auth";
 
 export default {
   created() {
@@ -63,6 +92,8 @@ export default {
   },
   data() {
     return {
+      dialogVisible: false,
+      showMessage: "添加学生",
       defaultColumns: [
         {
           prop: "sid",
@@ -81,6 +112,10 @@ export default {
       estuList: [],
       checkedStu: [],
       stuflag: "allstu",
+      fileList: [],
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     };
   },
   computed: {
@@ -95,14 +130,44 @@ export default {
         getEStudent(this.$route.query.id)
           .then((response) => {
             this.estuList = response.data;
+            this.showMessage = "删除学生";
           })
           .catch(() => {
             this.message.error("请求出错，请重新尝试");
           });
+      } else {
+        this.showMessage = "添加学生";
       }
     },
   },
   methods: {
+    handleChange(file, fileList) {
+      //文件数量改变
+      this.fileList = fileList;
+    },
+    uploadEPaper() {
+      var param = new FormData();
+      this.fileList.forEach((val, index) => {
+        // 根据需要更改字段名，例如："file" + (index + 1)
+        param.append("file", val.raw);
+      });
+      axios
+        .post(process.env.VUE_APP_BASE_API + "/upefile", param, {
+          headers: {
+            token: getToken(this.$store.getters.name),
+            eid: this.$route.query.id,
+          },
+        })
+        .then(() => {
+          this.$message({
+            message: "上传成功",
+            type: "success",
+          });
+        })
+        .catch(() => {
+          this.$message.error("出现错误，请重新尝试");
+        });
+    },
     handleSelectionChange(val) {
       // 当选择项发生变化时触发这个函数
       this.checkedStu = val.map((item) => item.sid);
@@ -196,6 +261,13 @@ export default {
         .catch(() => {
           this.$message.error("获取答案失败，请重新尝试");
         });
+    },
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then((_) => {
+          done();
+        })
+        .catch((_) => {});
     },
   },
 };

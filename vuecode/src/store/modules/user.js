@@ -1,12 +1,12 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, getdefaultToken } from '@/utils/auth'
 // resetRouter函数用于刷新界面
 import { resetRouter } from '@/router'
 
 // 返回默认的用户对象
 const getDefaultState = () => {
   return {
-    token: getToken(),
+    token: getdefaultToken(),
     name: '',
     urole: 'student',
     avatar: '',
@@ -54,10 +54,15 @@ const actions = {
           const { data } = response
           console.log('登录返回的数据为', data);
           commit('SET_TOKEN', data.accessToken)
-          commit('SET_UROLE', data.identity)
+          commit('SET_UROLE', data.role)
           commit('SET_NAME', data.username)
           commit('SET_URID', data.rid)
-          setToken(data.accessToken)
+          commit('SET_AVATAR', process.env.VUE_APP_BASE_API + data.avatar)
+          console.log('往setToken里面传的参数为', state.name)
+          setToken(state.name, data.accessToken)
+
+          // 登录成功之后来一次getinfo
+
           resolve()
         }).catch(error => {
           reject(error)
@@ -81,7 +86,7 @@ const actions = {
         commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
         commit('SET_UROLE', identity)
         commit('SET_URID', data.rid)
-
+        console.log('getinfo被触发，此时的state是', state);
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -93,7 +98,7 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
-        removeToken() // 先把token移除
+        removeToken(state.name) // 先把token移除
         resetRouter()
         commit('RESET_STATE')
         resolve()
@@ -110,7 +115,7 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      removeToken() // 必须先把token移除
+      removeToken(state.name) // 必须先把token移除
       commit('RESET_STATE')
       resolve()
     })

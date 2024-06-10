@@ -159,7 +159,7 @@ export default {
       axios
         .post(process.env.VUE_APP_BASE_API + "/upAnsfile", param, {
           headers: {
-            token: getToken(),
+            token: getToken(this.$store.getters.name),
             sekey: this.$route.query.row.eid + "_" + this.$store.getters.rid,
           },
         })

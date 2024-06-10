@@ -3,7 +3,7 @@ import router from "./router";
 import store from "./store";
 import { Message } from 'element-ui'
 import 'nprogress/nprogress.css'
-import { getToken } from '@/utils/auth' // get token from cookie
+import { getToken, getdefaultToken } from '@/utils/auth' // get token from cookie
 
 import getPageTitle from '@/utils/get-page-title'
 
@@ -17,9 +17,10 @@ router.beforeEach(async (to, from, next) => {
   // set page title
   document.title = getPageTitle(to.meta.title)
   // 获得cookie里面的token
-  const hasToken = getToken()
+  const hasdefaultToken = getdefaultToken()
+  const hasToken = getToken(store.getters.name)
 
-  if (hasToken) {
+  if (hasdefaultToken || hasToken) {
     // 如果已经有token，证明已经登录过了
     if (to.path === '/login') {
       // 如果要去的界面是login，那么就直接跳转到根界面

@@ -68,7 +68,7 @@
           type="primary"
           style="width: 100%"
           @click="handleLogin"
-          >{{ userroleC }}登录</el-button
+          >用户登录</el-button
         >
       </el-form-item>
       <!-- @就是 v-on 是vue对onclick的封装 -->

@@ -20,7 +20,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       // 检查是否有一个token存在
       // 如果存在token，就把token加在请求头里面，下面是一个自定义的headers键
-      config.headers['token'] = getToken()
+      config.headers['token'] = store.getters.token
     }
     // 返回修改（可能）过后的请求
     console.log('发送出去的请求为', config);

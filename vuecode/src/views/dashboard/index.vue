@@ -66,7 +66,7 @@ export default {
       activeName: "first",
       saveLoading: false,
       headers: {
-        token: getToken(),
+        token: getToken(this.$store.getters.name),
       },
       imagecropperKey: 0,
     };

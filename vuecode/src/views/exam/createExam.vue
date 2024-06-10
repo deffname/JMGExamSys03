@@ -120,7 +120,7 @@ export default {
             param,
             {
               headers: {
-                token: getToken(),
+                token: getToken(this.$store.getters.name),
                 eid: data,
               },
             }

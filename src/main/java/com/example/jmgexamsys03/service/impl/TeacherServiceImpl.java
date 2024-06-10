@@ -5,10 +5,10 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
 import com.example.jmgexamsys03.entity.*;
 
 import com.example.jmgexamsys03.entity.Dto.*;
+import com.example.jmgexamsys03.utils.fileManage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -49,7 +49,7 @@ public class TeacherServiceImpl implements TeacherService{
     public ResponseResult CreateExam(CreateExamDto createExamDto){
         User user = UserThreadLocal.get();
         if (!user.getIdentity().equals("teacher")){
-            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
+            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR,"当前身份有问题");
         }
         long uid = user.getUid();
         QueryWrapper<Comparsiontable> qwt = new QueryWrapper<>();
@@ -67,6 +67,19 @@ public class TeacherServiceImpl implements TeacherService{
         try {
             st = formatter.parse(stime);
             et = formatter.parse(etime);
+
+
+            // 使用Calendar给st和et加一天，因为前端那个组件的时区问题，导致选择的时间比传送回来的时间提前一天
+            Calendar calendarSt = Calendar.getInstance();
+            calendarSt.setTime(st);
+            calendarSt.add(Calendar.DAY_OF_MONTH, 1); // 给开始时间加一天
+            st = calendarSt.getTime();
+
+            Calendar calendarEt = Calendar.getInstance();
+            calendarEt.setTime(et);
+            calendarEt.add(Calendar.DAY_OF_MONTH, 1); // 给结束时间加一天
+            et = calendarEt.getTime();
+
         } catch (Exception e){
             System.out.println("时间转换错误");
             return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR);
@@ -161,6 +174,10 @@ public class TeacherServiceImpl implements TeacherService{
         System.out.println("传递进来的sekeyl"+sekeyl);
         for(String mse:sekeyl){
             System.out.println("now mse = "+mse);
+            String tmppaper = examStuMapper.selectById(mse).getAnspaper();
+            if(tmppaper!=null){
+                fileManage.deleteFile(tmppaper);
+            }
             examStuMapper.deleteById(mse);
         }
         return ResponseResult.okResult("删除成功");
@@ -248,6 +265,24 @@ public class TeacherServiceImpl implements TeacherService{
 
     public ResponseResult DeleteExam(List<Long> eidl){
         for(Long eidt:eidl){
+            Exam examtmp = examMapper.selectById(eidt);
+            if(examtmp.getExampaper()!=null){
+                // 删除对应的考试文件
+                fileManage.deleteFile(examtmp.getExampaper());
+            }
+            // 删除对应考试下的所有学生的答案文件
+            QueryWrapper<Compexamstu> qwest = new QueryWrapper<>();
+            qwest.eq("eid",eidt);
+            List<Compexamstu> estmpl =  examStuMapper.selectList(qwest);
+
+            // 遍历所有考试下的学生的答案，如果提交的有对应文件就删除
+            for(Compexamstu est:estmpl){
+                if(est.getAnspaper()!=null){
+                    // 删除对应的考试文件
+                    fileManage.deleteFile(est.getAnspaper());
+                }
+            }
+
             examMapper.deleteById(eidt);
         }
         return ResponseResult.okResult("删除对应考试成功");

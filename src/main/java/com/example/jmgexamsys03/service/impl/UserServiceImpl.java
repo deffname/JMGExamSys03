@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
             return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"账户身份不存在");
         }
         // 返回对应用户的token和身份
-        return ResponseResult.okResult(new LoginUserResponseDto(token,nrole,rid));
+        return ResponseResult.okResult(new LoginUserResponseDto(token,nrole,rid, user.getUsername(),user.getAvatar()));
     }
 
     /**
