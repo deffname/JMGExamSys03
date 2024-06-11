@@ -96,7 +96,7 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.example.jmgexamsys03.JmgExamSys03Application</mainClass>
-                    <skip>true</skip>
+
                 </configuration>
                 <executions>
                     <execution>

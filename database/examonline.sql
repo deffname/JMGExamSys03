@@ -69,10 +69,11 @@ CREATE TABLE IF NOT EXISTS `exam` (
   `endtime` datetime DEFAULT NULL,
   `exampaper` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `state` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'notstart',
+  `pretime` bigint DEFAULT '15',
   PRIMARY KEY (`eid`),
   KEY `FK_tid_teae` (`tid`),
   CONSTRAINT `FK_tid_teae` FOREIGN KEY (`tid`) REFERENCES `teacher` (`tid`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- 数据导出被取消选择。
 
