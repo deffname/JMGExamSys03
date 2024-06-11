@@ -37,20 +37,20 @@ export const constantRoutes = [
   {
     path: '/adminv',
     component: Layout,
-    redirect: '/adminv/vteacher',
+    redirect: '/adminv/vuser',
     name: 'AdminView',
     meta: { title: 'View', icon: 'el-icon-s-help', belong: 'admin' },
     children: [
       {
-        path: 'vteacher',
-        name: 'VTeacher',
-        component: () => import('@/views/vteacher/index'),
-        meta: { title: 'VTeacher', icon: 'table', belong: 'admin' }
+        path: 'vuser',
+        name: 'VUser',
+        component: () => import('@/views/vUser/index'),
+        meta: { title: 'VUser', icon: 'table', belong: 'admin' }
       },
       {
         path: 'vexam',
         name: 'VAdminExam',
-        component: () => import('@/views/vexam/index'),
+        component: () => import('@/views/vallexam/index'),
         meta: { title: 'VExam', icon: 'tree', belong: 'admin' }
       }
     ]

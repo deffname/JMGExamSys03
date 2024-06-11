@@ -24,6 +24,7 @@ router.beforeEach(async (to, from, next) => {
     // 如果已经有token，证明已经登录过了
     if (to.path === '/login') {
       // 如果要去的界面是login，那么就直接跳转到根界面
+      console.log('有token，要去登录界面，直接跳到根界面');
       next({ path: '/' })
       NProgress.done()
     } else {
@@ -31,10 +32,10 @@ router.beforeEach(async (to, from, next) => {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
         // 有名称就下一步
-        console.log("此时已经有名称了，到下一步");
+        console.log("有token，有名称了，到下一步");
         next()
       } else {
-        console.log("路由拦截器在获取名称");
+        console.log("有token，没名称，路由拦截器在获取名称");
         try {
           // 这里自动发出了调取用户信息的请求
           await store.dispatch('user/getInfo')

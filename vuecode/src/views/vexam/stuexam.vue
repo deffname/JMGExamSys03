@@ -124,6 +124,7 @@ export default {
           message: "时间已到",
           duration: 0,
         });
+        this.$router.push({ path: "/" });
       }
     },
 

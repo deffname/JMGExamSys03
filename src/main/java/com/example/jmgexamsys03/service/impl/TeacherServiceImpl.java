@@ -3,6 +3,9 @@ package com.example.jmgexamsys03.service.impl;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import com.example.jmgexamsys03.entity.*;
@@ -195,7 +198,26 @@ public class TeacherServiceImpl implements TeacherService{
         if(!examtmp.getState().equals("notstart")){
             return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"考试已经开始或结束，无法开始考试");
         }
-        System.out.println("当前考试的时间为"+examtmp.getStarttime());
+
+        // 开始计算时间差值
+        LocalDateTime starttime = examtmp.getStarttime().toInstant().
+                atZone(ZoneId.systemDefault()).toLocalDateTime();
+        // 获取当前时间
+        LocalDateTime now = LocalDateTime.now();
+        // 计算时间差
+        Duration duration = Duration.between(now,starttime);
+        // 将Duration转换为分钟
+        long minutesBetween = duration.toMinutes();
+        long shouldt = examtmp.getPretime();
+
+        System.out.println("数据库时间"+examtmp.getStarttime()+"&&改变后的数据库时间"+starttime);
+        System.out.println("本地时间"+now+"&&时间差值"+minutesBetween);
+
+        if(minutesBetween>shouldt){
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,
+                    "距离可以开启考试还有"+(minutesBetween-shouldt)+"分钟");
+        }
+
         examtmp.setState("starting");
         examMapper.update(examtmp,new QueryWrapper<Exam>().eq("eid",eid));
         return ResponseResult.okResult("开启成功");
@@ -257,6 +279,10 @@ public class TeacherServiceImpl implements TeacherService{
     }
 
     public ResponseResult getStudent(){
+        User user = UserThreadLocal.get();
+        if (!user.getIdentity().equals("teacher")){
+            return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_ERROR);
+        }
         QueryWrapper<Student> qws = new QueryWrapper<>();
         // 获取用户中的所有学生
         List<Student> stuList =  studentMapper.selectList(qws);
