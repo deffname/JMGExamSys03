@@ -5,14 +5,21 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.jmgexamsys03.domain.ResponseResult;
 import com.example.jmgexamsys03.domain.enums.AppHttpCodeEnum;
 import com.example.jmgexamsys03.entity.Compexamstu;
+import com.example.jmgexamsys03.entity.Dto.AddStudentDto;
 import com.example.jmgexamsys03.entity.Exam;
 import com.example.jmgexamsys03.entity.User;
 import com.example.jmgexamsys03.mapper.ExamMapper;
 import com.example.jmgexamsys03.mapper.ExamStuMapper;
 import com.example.jmgexamsys03.mapper.StudentMapper;
 import com.example.jmgexamsys03.mapper.UserMapper;
+import com.example.jmgexamsys03.service.TeacherService;
 import com.example.jmgexamsys03.utils.UserThreadLocal;
 import com.example.jmgexamsys03.utils.fileManage;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Date;
+import java.util.*;
 
 
 /**
@@ -48,6 +53,8 @@ public class FileController {
     private ExamMapper examMapper;
     @Autowired
     private ExamStuMapper examStuMapper;
+    @Autowired
+    TeacherService teacherService;
 
     @PostMapping(value = "/uppic")
     public ResponseEntity<Object> uploadPic(MultipartHttpServletRequest multipartHttpServletRequest, HttpServletRequest request) throws IOException{
@@ -69,7 +76,7 @@ public class FileController {
 //        // 获取服务器的地址目录(开发阶段用的是Tomcat，后续可以是Web服务器)，也就是下面这段代码的前面是不固定的，括号里面是自己任意写的
 //        String path = request.getServletContext().getRealPath("/upload/");
 //        System.out.println("uppic 中 request.getServletContext() = " + request.getServletContext().getRealPath(""));
-        String path = "D:/user_app/mfile/mpic/";
+        String path = "/usr/app/mfile/mpic/";
         System.out.println("uppic 中 path = " + path);
         saveFile(f,path,avatar_name);
 
@@ -111,7 +118,7 @@ public class FileController {
 
         fname = noweid+"_"+timeStamp1+fname;
         System.out.println("文件名称为"+fname);
-        String path = "D:/user_app/mfile/epaper/";
+        String path = "/usr/app/mfile/epaper/";
         System.out.println("uppic 中 path = " + path);
         saveFile(file,path,fname);
 
@@ -152,7 +159,7 @@ public class FileController {
 
         fname = nsekey+"_"+timeStamp1+fname;
         System.out.println("文件名称为"+fname);
-        String path = "D:/user_app/mfile/anspaper/";
+        String path = "/usr/app/mfile/anspaper/";
         System.out.println("uppic 中 path = " + path);
         saveFile(file,path,fname);
 
@@ -183,7 +190,7 @@ public class FileController {
 
         OutputStream os = response.getOutputStream();
         //下载文件的路径
-        String downPath = "D:/user_app"+filePath;
+        String downPath = "/usr/app"+filePath;
         //读取目标文件
         File f = new File(downPath);
         //创建输入流
@@ -202,6 +209,38 @@ public class FileController {
         os.close();
 
         return ResponseResult.okResult();
+    }
+
+    @PostMapping("/uploadexcel")
+    public ResponseResult uploadExcel(@RequestParam("file") MultipartFile file,HttpServletRequest request) {
+        try (InputStream inputStream = file.getInputStream()) {
+            Workbook workbook = new XSSFWorkbook(inputStream);
+            // 处理第一个表格
+            Sheet sheet = workbook.getSheetAt(0);
+
+            List<Long> sids = new ArrayList<>();
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            rowIterator.next();
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Cell sidCell = row.getCell(0); // 假设sid是第一列
+                if (sidCell != null) {
+                    long sid = (long) sidCell.getNumericCellValue();
+                    sids.add(sid);
+                }
+            }
+
+            long neid = Long.parseLong(request.getHeader("eid"));
+            AddStudentDto addStudentDto = new AddStudentDto(sids,neid);
+            return teacherService.AddStudent(addStudentDto);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR,"添加失败");
+        }
     }
 
 

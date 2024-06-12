@@ -62,7 +62,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         // 部署时似乎不需要更改，访问时如果是http://localhost:8087/mfile/...就自动访问后面的addResourceLocations路径下的文件夹
         // 这里的image并不真实存在，只是用于逻辑区分或者代指后面的绝对路径
-        registry.addResourceHandler("/mfile/**").addResourceLocations("file:D:/user_app/mfile/");
+        registry.addResourceHandler("/mfile/**").addResourceLocations("file:/usr/app/mfile/");
     }
 }
 

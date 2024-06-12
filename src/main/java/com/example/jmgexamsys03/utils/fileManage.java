@@ -9,7 +9,7 @@ public class fileManage {
      * @param filePath
      */
     public static void deleteFile(String filePath){
-        File file = new File("D:/user_app"+filePath);
+        File file = new File("/usr/app"+filePath);
         if (file.exists() && !file.isDirectory()) {
             if (file.delete()) {
                 System.out.println("文件已成功删除：" + filePath);

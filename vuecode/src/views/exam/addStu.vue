@@ -5,6 +5,7 @@
       <el-button @click="dialogVisible = true">试卷上传</el-button>
       <el-button @click="sExam">开始考试</el-button>
       <el-button @click="eExam">结束考试</el-button>
+      <el-button @click="dialogVisible1 = true">excel上传学生</el-button>
       <el-button v-if="stuflag == 'checkedstu'" @click="downloadAns"
         >答案下载</el-button
       >
@@ -37,6 +38,18 @@
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="uploadEPaper">确认上传</el-button>
       </span>
+    </el-dialog>
+
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible1"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <template>
+        <input type="file" @change="onFileChange" />
+        <button @click="uploadExcel">上传文件</button>
+      </template>
     </el-dialog>
 
     <el-radio-group v-model="stuflag" size="big" style="margin-bottom: 30px">
@@ -93,6 +106,8 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      selectexcel: null,
+      dialogVisible1: false,
       showMessage: "添加学生",
       defaultColumns: [
         {
@@ -145,6 +160,9 @@ export default {
       //文件数量改变
       this.fileList = fileList;
     },
+    onFileChange(e) {
+      this.selectexcel = e.target.files[0];
+    },
     uploadEPaper() {
       var param = new FormData();
       this.fileList.forEach((val, index) => {
@@ -166,6 +184,28 @@ export default {
         })
         .catch(() => {
           this.$message.error("出现错误，请重新尝试");
+        });
+    },
+    uploadExcel() {
+      const formData = new FormData();
+      formData.append("file", this.selectexcel);
+
+      axios
+        .post(process.env.VUE_APP_BASE_API + "/uploadexcel", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            token: this.$store.getters.token,
+            eid: this.$route.query.id,
+          },
+        })
+        .then(() => {
+          this.$message({
+            message: "加入成功",
+            type: "success",
+          });
+        })
+        .catch(() => {
+          this.$message.error("加入失败");
         });
     },
     handleSelectionChange(val) {
